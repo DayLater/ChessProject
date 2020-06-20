@@ -30,6 +30,7 @@ namespace ChessProject
             return result;
         }
 
+        //Найти всевозможные позиции для одного направления
         void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map)
         {
             int x = Position.X + dx;
@@ -49,9 +50,9 @@ namespace ChessProject
             }
         }
 
-        public void Move(Point newPosition)
+        public void Move(Position newPosition)
         {
-            throw new NotImplementedException();
+            Position = newPosition;
         }
     }
 }

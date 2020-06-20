@@ -11,11 +11,16 @@ namespace ChessProject
     public class GameModel
     {
         //Игроки
-        Player white = new Player("white");
-        Player black = new Player("black");
+        Player white = new Player("White");
+        Player black = new Player("Black");
 
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
+
+        public GameModel()
+        {
+            CreateMap();
+        }
 
         //Метод для заполнения карты фигурами
         void CreateMap() 
@@ -26,16 +31,23 @@ namespace ChessProject
         //Метод для добавляния слонов на карту
         void AddElephantsToMap()
         {
-            Map[0, 2] = new Elephant(new Position(0, 2), black);
-            Map[0, 5] = new Elephant(new Position(0, 5), black);
-            Map[7, 2] = new Elephant(new Position(7, 2), white);
-            Map[7, 5] = new Elephant(new Position(7, 5), white);
+            Map[2, 0] = new Elephant(new Position(2, 0), black);
+            Map[5, 0] = new Elephant(new Position(5, 0), black);
+            Map[2, 7] = new Elephant(new Position(2, 7), white);
+            Map[5, 7] = new Elephant(new Position(5, 7), white);
         }
 
         //Метод для поиска пути конкретной фигуры
         List<Position> FindPosibleWays(IFigure figure)
         {
             return figure.FindPosibleWays(Map);
+        }
+
+        void MakeTurn(Position newPos, IFigure figure)
+        {
+            Map[figure.Position.X, figure.Position.Y] = null;
+            Map[newPos.X, newPos.Y] = figure;
+            figure.Position = newPos;
         }
     }
 }
