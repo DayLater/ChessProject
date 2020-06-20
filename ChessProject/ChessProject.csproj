@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Color.cs" />
+    <Compile Include="PlayerColor.cs" />
     <Compile Include="Figures\Elephant.cs" />
     <Compile Include="Figures\Pawn.cs" />
     <Compile Include="Figures\TestElephant.cs" />
@@ -64,7 +64,6 @@
     </Compile>
     <Compile Include="GameModel.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerEnum.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

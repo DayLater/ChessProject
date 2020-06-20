@@ -10,8 +10,8 @@ namespace ChessProject.Figures
     [TestFixture]
     public class TestPawn
     {
-        Player whitePlayer = new Player(Color.White);
-        Player blackPlayer = new Player(Color.Black);
+        Player whitePlayer = new Player(PlayerColor.White);
+        Player blackPlayer = new Player(PlayerColor.Black);
 
         IFigure[,] map = new IFigure[8, 8];
 

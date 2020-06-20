@@ -27,7 +27,7 @@ namespace ChessProject.Figures
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
-            if (Player.Color.Equals(Color.Black))
+            if (Player.Color.Equals(PlayerColor.Black))
             {
                 FindPosiblePositionsInDirection(result, 0, 1, map, false);//может ходить если пусто
                 FindPosiblePositionsInDirection(result, -1, 1, map, true);//может есть, но не ходить

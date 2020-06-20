@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessProject
 {
-    enum PlayerEnum
+    public enum PlayerColor
     {
         White,
         Black

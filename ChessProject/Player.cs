@@ -8,9 +8,9 @@ namespace ChessProject
 {
     public class Player
     {
-        public Color Color { get; }
+        public PlayerColor Color { get; }
 
-        public Player(Color color)
+        public Player(PlayerColor color)
         {
             Color = color;
         }
