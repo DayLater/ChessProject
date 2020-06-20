@@ -9,12 +9,12 @@ namespace ChessProject
 {
     public interface IFigure
     {
-        Point Position { get; set; }
-        Player Player { get; set; }
-        bool IsAlive { get; set; }
+        Position Position { get; set; }
+        Player Player { get;}
+        bool IsAlive { get; }
 
         void Move(Point newPosition);
 
-        List<Point> FindPosibleWays();
+        List<Position> FindPosibleWays(IFigure[,] map);
     }
 }
