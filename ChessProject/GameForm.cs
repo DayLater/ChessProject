@@ -31,8 +31,8 @@ namespace ChessProject
         Button MakeButton(int i, int j)
         {
             Button button = new Button();
-            if ((i + j) % 2 == 0) button.BackColor = Color.Brown;
-            else button.BackColor = Color.OldLace;
+            if ((i + j) % 2 == 0) button.BackColor = System.Drawing.Color.Brown;
+            else button.BackColor = System.Drawing.Color.OldLace;
             var size = new Size(40, 40);
             button.Size = size;
             button.Location = new Point(i * 40, j * 40);
