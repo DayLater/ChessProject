@@ -11,8 +11,8 @@ namespace ChessProject
     public class GameModel
     {
         //Игроки
-        Player white = new Player("White");
-        Player black = new Player("Black");
+        Player white = new Player(Color.White);
+        Player black = new Player(Color.Black);
 
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];

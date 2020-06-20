@@ -19,7 +19,10 @@ namespace ChessProject
             Player = player;
             IsAlive = true;
         }
-
+        public void Move(Position newPosition)
+        {
+            Position = newPosition;
+        }
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
@@ -50,9 +53,6 @@ namespace ChessProject
             }
         }
 
-        public void Move(Position newPosition)
-        {
-            Position = newPosition;
-        }
+       
     }
 }

@@ -12,9 +12,7 @@ namespace ChessProject
         Position Position { get; set; }
         Player Player { get;}
         bool IsAlive { get; }
-
         void Move(Position newPosition);
-
         List<Position> FindPosibleWays(IFigure[,] map);
     }
 }

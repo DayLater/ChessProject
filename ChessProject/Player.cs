@@ -8,16 +8,16 @@ namespace ChessProject
 {
     public class Player
     {
-        public string Name { get; }
+        public Color Color { get; }
 
-        public Player(string name)
+        public Player(Color color)
         {
-            Name = name;
+            Color = color;
         }
 
         public static bool operator ==(Player player1, Player player2)
         {
-            return player1.Name == player2.Name;
+            return player1.Color == player2.Color;
         }
 
         public static bool operator !=(Player player1, Player player2)
