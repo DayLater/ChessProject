@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Figures\Elephant.cs" />
+    <Compile Include="Figures\Pawn.cs" />
     <Compile Include="Figures\TestElephant.cs" />
     <Compile Include="Figures\IFigure.cs" />
     <Compile Include="GameForm.cs">
