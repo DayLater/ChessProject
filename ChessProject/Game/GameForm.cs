@@ -35,7 +35,7 @@ namespace ChessProject
             else button.BackColor = System.Drawing.Color.OldLace;
             var size = new Size(40, 40);
             button.Size = size;
-            button.Location = new Point(i * 40, j * 40);
+            button.Location = new Point(j * 40, i * 40);
             button.Enabled = false;
             Controls.Add(button);
             return button;
