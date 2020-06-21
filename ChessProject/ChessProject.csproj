@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Figures\FinderWays.cs" />
     <Compile Include="Figures\Horse.cs" />
+    <Compile Include="Figures\King.cs" />
     <Compile Include="Figures\Queen.cs" />
     <Compile Include="Figures\Rook.cs" />
     <Compile Include="Player\PlayerColor.cs" />

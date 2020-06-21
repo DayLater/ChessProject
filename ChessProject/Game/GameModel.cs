@@ -25,16 +25,34 @@ namespace ChessProject
         //Метод для заполнения карты фигурами
         void CreateMap() 
         {
-            AddElephantsToMap();
+            AddOneSide(white);
+            AddOneSide(black);
         }
 
-        //Метод для добавляния слонов на карту
-        void AddElephantsToMap()
+        //Добавляет играющую сторону
+        void AddOneSide(Player player)
         {
-            Map[2, 0] = new Elephant(new Position(2, 0), black);
-            Map[5, 0] = new Elephant(new Position(5, 0), black);
-            Map[2, 7] = new Elephant(new Position(2, 7), white);
-            Map[5, 7] = new Elephant(new Position(5, 7), white);
+            var side = 0;
+            var dx = 1;
+            int kingIndex = 4;
+            int QueenIndex = 3;
+            if (player == white)
+            {
+                side = 7;
+                dx = -1;
+                kingIndex = 3;
+                QueenIndex = 4;
+            }
+            for (int i = 0; i < 8; i++)
+                Map[side + dx, i] = new Pawn(new Position(side + dx, i), player);
+            Map[side, 0] = new Rook(new Position(side, 0), player);
+            Map[side, 7] = new Rook(new Position(side, 7), player);
+            Map[side, 1] = new Horse(new Position(side, 1), player);
+            Map[side, 6] = new Horse(new Position(side, 6), player);
+            Map[side, 2] = new Elephant(new Position(side, 2), player);
+            Map[side, 5] = new Elephant(new Position(side, 5), player);
+            Map[side, QueenIndex] = new Queen(new Position(side, 3), player);
+            Map[side, kingIndex] = new King(new Position(side, 4), player);
         }
 
         //Метод для поиска пути конкретной фигуры
@@ -47,7 +65,7 @@ namespace ChessProject
         {
             Map[figure.Position.X, figure.Position.Y] = null;
             Map[newPos.X, newPos.Y] = figure;
-            figure.Position = newPos;
+            figure.Move(newPos);
         }
     }
 }
