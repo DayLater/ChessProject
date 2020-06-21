@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ChessProject.Figures
 {
-    public class Horse : IFIgure
+    public class Horse : IFigure
     {
         public Position Position { get; set; }
         public Player Player { get; }
         public bool IsAlive { get; }
 
-        public Pawn(Position position, Player player)
+        public Horse(Position position, Player player)
         {
             Position = position;
             Player = player;

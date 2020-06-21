@@ -12,7 +12,7 @@ namespace ChessProject.Figures
         public Player Player { get; }
         public bool IsAlive { get; }
 
-        public Pawn(Position position, Player player)
+        public Rook(Position position, Player player)
         {
             Position = position;
             Player = player;
