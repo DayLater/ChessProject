@@ -26,33 +26,11 @@ namespace ChessProject
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
-            FindPosiblePositionsInDirection(result, 1, 1, map);
-            FindPosiblePositionsInDirection(result, 1, -1, map);
-            FindPosiblePositionsInDirection(result, -1, 1, map);
-            FindPosiblePositionsInDirection(result, -1, -1, map);
+            this.FindPosiblePositionsInDirection(result, 1, 1, map);
+            this.FindPosiblePositionsInDirection(result, 1, -1, map);
+            this.FindPosiblePositionsInDirection(result, -1, 1, map);
+            this.FindPosiblePositionsInDirection(result, -1, -1, map);
             return result;
         }
-
-        //Найти всевозможные позиции для одного направления
-        void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map)
-        {
-            int x = Position.X + dx;
-            int y = Position.Y + dy;
-            while (x >= 0 && x < 8 && y >= 0 && y < 8)
-            {
-                if (map[x, y] is null)
-                    positions.Add(new Position(x, y));
-                else
-                {
-                    if (map[x, y].Player != Player)
-                        positions.Add(new Position(x, y));
-                    break;
-                }
-                x += dx;
-                y += dy;
-            }
-        }
-
-       
     }
 }
