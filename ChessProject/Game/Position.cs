@@ -22,7 +22,7 @@ namespace ChessProject
         public override bool Equals(object obj)
         {
             var pos = obj as Position;
-            if (pos == null) return false;
+            if (pos is null) return false;
             return X == pos.X && Y == pos.Y;
         }
 

@@ -28,7 +28,7 @@ namespace ChessProject
         public override bool Equals(object obj)
         {
             Player player = obj as Player;
-            if (player == null) return false;
+            if (player is null) return false;
             return this == player;
         }
     }
