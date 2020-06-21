@@ -12,11 +12,12 @@ namespace ChessProject
     {
         Player whitePlayer = new Player(PlayerColor.White);
         Player blackPlayer = new Player(PlayerColor.Black);
-        IFigure[,] map = new IFigure[8, 8];
+
 
         [Test]
         public void FindPosibleWaysWithoutEnemies()
         {
+            IFigure[,] map = new IFigure[8, 8];
             Queen queen = new Queen(new Position(5, 1), whitePlayer);
             var expected = new List<Position>()
             {
@@ -41,6 +42,7 @@ namespace ChessProject
         [Test]
         public void FindPosibleWaysWithEnemies()
         {
+            IFigure[,] map = new IFigure[8, 8];
             Queen queen = new Queen(new Position(5, 1), whitePlayer);
             var elephantEnemy = new Elephant(new Position(4, 2), blackPlayer);
             map[4, 2] = elephantEnemy;
@@ -63,7 +65,7 @@ namespace ChessProject
         [Test]
         public void FindPosibleWaysWithAnyEnemies()
         {
-            map = new IFigure[8, 8];
+            IFigure[,] map = new IFigure[8, 8];
             Queen queen = new Queen(new Position(5, 1), whitePlayer);
             var elephantEnemy = new Elephant(new Position(4, 2), blackPlayer);
             var elephant2Enemy = new Elephant(new Position(5, 2), blackPlayer);
@@ -73,7 +75,7 @@ namespace ChessProject
             var expected = new List<Position>()
             {
                 new Position(4,0), new Position(6, 0), new Position(4,2),
-                new Position(6,2), new Position(7,3), new Position(5, 0)
+                new Position(6,2), new Position(7,3), new Position(5, 0), new Position(5,2)
             };
             for (int i = 0; i < 8; i++)
                 if (i != 5)
