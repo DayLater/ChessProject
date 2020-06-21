@@ -11,19 +11,14 @@ namespace ChessProject.Figures
         public Position Position { get; set; }
         public Player Player { get; }
         public bool IsAlive { get; }
-
+        public string Picture => Player.Color == PlayerColor.Black? "♞" : "♘";
+        public void Move(Position newPosition) => Position = newPosition;
         public Horse(Position position, Player player)
         {
             Position = position;
             Player = player;
             IsAlive = true;
         }
-
-        public void Move(Position newPosition)
-        {
-            Position = newPosition;
-        }
-
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
@@ -37,9 +32,7 @@ namespace ChessProject.Figures
             FindPosiblePositionsInDirection(result, 1, 2, map);
             return result;
         }
-
-        public void FindPosiblePositionsInDirection(
-            List<Position> positions, int dx, int dy, IFigure[,] map)
+        public void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map)
         {
             int x = Position.X + dx;
             int y = Position.Y + dy;

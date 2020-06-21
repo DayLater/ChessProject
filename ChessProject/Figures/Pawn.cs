@@ -12,6 +12,7 @@ namespace ChessProject.Figures
         public Position Position { get; set; }
         public Player Player { get; }
         public bool IsAlive { get; }
+        public string Picture => Player.Color == PlayerColor.Black ? "♟" : "♙";
         private bool IsFirstStep { get; set; } = true;
         public Pawn(Position position, Player player)
         {
@@ -64,6 +65,5 @@ namespace ChessProject.Figures
                 }
             }
         }
-
     }
 }

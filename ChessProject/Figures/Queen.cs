@@ -10,9 +10,9 @@ namespace ChessProject
     {
         public Position Position { get; set; }
         public Player Player { get;  }
-
         public bool IsAlive { get; set; }
-
+        public string Picture => Player.Color == PlayerColor.Black ? "♛" : "♕";
+        public void Move(Position newPosition) => Position = newPosition;
         public Queen(Position position, Player player)
         {
             Position = position;
@@ -27,11 +27,6 @@ namespace ChessProject
                     if (!(i == j && i == 0))
                         this.FindPosiblePositionsInDirection(result, i, j, map);
             return result;
-        }
-
-        public void Move(Position newPosition)
-        {
-            Position = newPosition;
         }
     }
 }

@@ -12,16 +12,14 @@ namespace ChessProject
         public Position Position { get; set; }
         public Player Player { get; }
         public bool IsAlive { get; }
-
+        public string Picture => Player.Color == PlayerColor.Black? "♝" : "♗";
+        public void Move(Position newPosition) => Position = newPosition;
         public Elephant(Position position, Player player)
         {
             Position = position;
             Player = player;
             IsAlive = true;
         }
-
-        public void Move(Position newPosition) => Position = newPosition;
-
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();

@@ -9,17 +9,15 @@ namespace ChessProject
     public class King : IFigure
     {
         public Position Position { get; set; }
-
         public Player Player { get; }
-
         public bool IsAlive { get; set; }
-
+        public string Picture => Player.Color == PlayerColor.Black ? "♚" : "♔";
+        public void Move(Position newPosition) => Position = newPosition;
         public King(Position position, Player player)
         {
             Position = position;
             Player = player;
         }
-
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
@@ -29,7 +27,6 @@ namespace ChessProject
                         FindPosiblePositionsInDirection(result, i, j, map);
             return result;
         }
-
         //ищем позиции в одном направлении
         void FindPosiblePositionsInDirection(List<Position> result, int dx, int dy, IFigure[,] map)
         {
@@ -46,7 +43,5 @@ namespace ChessProject
                 }
             }
         }
-
-        public void Move(Position newPosition) => Position = newPosition;
     }
 }
