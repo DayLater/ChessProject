@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChessProject
+namespace ChessProject.Figures
 {
     public class Pawn : IFigure
     {
@@ -13,20 +13,17 @@ namespace ChessProject
         public Player Player { get; }
         public bool IsAlive { get; }
         private bool IsFirstStep { get; set; } = true;
-
         public Pawn(Position position, Player player)
         {
             Position = position;
             Player = player;
             IsAlive = true;
         }
-
         public void Move(Position newPosition)
         {
             Position = newPosition;
             IsFirstStep = false;
         }
-
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
@@ -48,7 +45,6 @@ namespace ChessProject
             }
             return result;
         }
-
         void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map, bool eat)
         {
             int x = Position.X + dx;
