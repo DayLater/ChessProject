@@ -35,14 +35,10 @@ namespace ChessProject
         {
             var side = 0;
             var dx = 1;
-            int kingIndex = 4;
-            int QueenIndex = 3;
             if (player == white)
             {
                 side = 7;
                 dx = -1;
-                kingIndex = 3;
-                QueenIndex = 4;
             }
             for (int i = 0; i < 8; i++)
                 Map[side + dx, i] = new Pawn(new Position(side + dx, i), player);
@@ -52,8 +48,8 @@ namespace ChessProject
             Map[side, 6] = new Horse(new Position(side, 6), player);
             Map[side, 2] = new Elephant(new Position(side, 2), player);
             Map[side, 5] = new Elephant(new Position(side, 5), player);
-            Map[side, QueenIndex] = new Queen(new Position(side, 3), player);
-            Map[side, kingIndex] = new King(new Position(side, 4), player);
+            Map[side, 3] = new Queen(new Position(side, 3), player);
+            Map[side, 4] = new King(new Position(side, 4), player);
         }
 
         //Метод для поиска пути конкретной фигуры
