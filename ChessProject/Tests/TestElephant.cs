@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace ChessProject.Figures
+namespace ChessProject
 {
     [TestFixture]
     public class TestElephant

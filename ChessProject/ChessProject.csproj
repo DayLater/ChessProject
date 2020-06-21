@@ -53,9 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Figures\FinderWays.cs" />
+    <Compile Include="Figures\Queen.cs" />
     <Compile Include="Player\PlayerColor.cs" />
     <Compile Include="Figures\Elephant.cs" />
     <Compile Include="Figures\Pawn.cs" />
+    <Compile Include="Tests\QueenTest.cs" />
     <Compile Include="Tests\TestElephant.cs" />
     <Compile Include="Figures\IFigure.cs" />
     <Compile Include="Tests\TestPawn.cs" />
