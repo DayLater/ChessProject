@@ -25,7 +25,10 @@ namespace ChessProject
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
-            
+            this.FindPosiblePositionsInDirection(result, 0, 1, map);
+            this.FindPosiblePositionsInDirection(result, 0, -1, map);
+            this.FindPosiblePositionsInDirection(result, 1, 0, map);
+            this.FindPosiblePositionsInDirection(result, -1, 0, map);
             return result;
         }
     }

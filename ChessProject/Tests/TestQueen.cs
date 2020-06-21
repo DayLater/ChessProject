@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace ChessProject
+namespace ChessProject.Figures
 {
     [TestFixture]
-    public class QueenTest
+    public class TestQueen
     {
         Player whitePlayer = new Player(PlayerColor.White);
         Player blackPlayer = new Player(PlayerColor.Black);

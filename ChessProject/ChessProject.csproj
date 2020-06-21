@@ -63,6 +63,7 @@
     <Compile Include="Figures\Pawn.cs" />
     <Compile Include="Tests\TestElephant.cs" />
     <Compile Include="Figures\IFigure.cs" />
+    <Compile Include="Tests\TestHorse.cs" />
     <Compile Include="Tests\TestPawn.cs" />
     <Compile Include="Game\GameForm.cs">
       <SubType>Form</SubType>
@@ -72,6 +73,8 @@
     <Compile Include="Game\Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\TestQueen.cs" />
+    <Compile Include="Tests\TestRook.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
