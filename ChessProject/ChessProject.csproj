@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Figures\FinderWays.cs" />
     <Compile Include="Figures\Horse.cs" />
     <Compile Include="Figures\Queen.cs" />
     <Compile Include="Figures\Rook.cs" />
