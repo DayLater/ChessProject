@@ -8,24 +8,33 @@ using System.Windows.Forms;
 
 namespace ChessProject
 {
-    class GameForm: Form
+    class GameForm : Form
     {
         private readonly GameModel game = new GameModel();
-        Button[,] buttons = new Button[8, 8]; 
+        Button[,] buttons = new Button[8, 8];
 
         public GameForm()
         {
-            Size = new Size(400, 400);
+            Size = new Size(700, 700);
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
-                    buttons[i,j] = MakeButton(i, j);
+                    buttons[i, j] = MakeButton(i, j);
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
-                    if (game.Map[i, j] is IFigure)
+                {
+                    var figure = game.Map[i, j];
+                    if (figure is IFigure)
                     {
-                        buttons[i, j].Text = "Здесь фигурка";
+                        var picture = "qwe";
+                        if (figure is King)
+                        {
+                            if (figure.Player.Color == PlayerColor.White) picture = "♔";
+                            else picture = "♚";
+                        }
+                        buttons[i, j].Text = picture;
                         buttons[i, j].Enabled = true;
                     }
+                }
         }
 
         Button MakeButton(int i, int j)
@@ -33,9 +42,10 @@ namespace ChessProject
             Button button = new Button();
             if ((i + j) % 2 == 0) button.BackColor = System.Drawing.Color.Brown;
             else button.BackColor = System.Drawing.Color.OldLace;
-            var size = new Size(40, 40);
+            var size = new Size(80, 80);
             button.Size = size;
-            button.Location = new Point(j * 40, i * 40);
+            button.Font = new Font("Times New Roman", 28F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button.Location = new Point(j * 80, i * 80);
             button.Enabled = false;
             Controls.Add(button);
             return button;
