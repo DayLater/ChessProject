@@ -27,8 +27,32 @@ namespace ChessProject.Figures
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
-            result.Add(new Position(1,1));
+            FindPosiblePositionsInDirection(result, -1, -2, map);
+            FindPosiblePositionsInDirection(result, -2, -1, map);
+            FindPosiblePositionsInDirection(result, 1, -2, map);
+            FindPosiblePositionsInDirection(result, 2, -1, map);
+            FindPosiblePositionsInDirection(result, -2, 1, map);
+            FindPosiblePositionsInDirection(result, -1, 2, map);
+            FindPosiblePositionsInDirection(result, 2, 1, map);
+            FindPosiblePositionsInDirection(result, 1, 2, map);
             return result;
+        }
+
+        public void FindPosiblePositionsInDirection(
+            List<Position> positions, int dx, int dy, IFigure[,] map)
+        {
+            int x = Position.X + dx;
+            int y = Position.Y + dy;
+            if (x >= 0 && x < 8 && y >= 0 && y < 8)
+            {
+                if (map[x, y] is null)
+                    positions.Add(new Position(x, y));
+                else
+                {
+                    if (map[x, y].Player != this.Player)
+                        positions.Add(new Position(x, y));
+                }
+            }
         }
     }
 }
