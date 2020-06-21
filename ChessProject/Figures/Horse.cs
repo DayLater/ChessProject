@@ -27,7 +27,7 @@ namespace ChessProject.Figures
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
-
+            result.Add(new Position(1,1));
             return result;
         }
     }
