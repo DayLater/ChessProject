@@ -25,10 +25,8 @@ namespace ChessProject
                     buttons[i, j] = MakeButton(i, j);
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
-                {
                     if (game.Map[i, j] is IFigure)
                         buttons[i, j].Text = game.Map[i,j].Picture;
-                }
         }
 
         void SwapBlocks(object sender, EventArgs e)
