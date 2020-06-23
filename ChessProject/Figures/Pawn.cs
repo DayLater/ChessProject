@@ -30,19 +30,19 @@ namespace ChessProject
             var result = new List<Position>();
             if (Player.Color.Equals(PlayerColor.Black))
             {
-                FindPosiblePositionsInDirection(result, 0, 1, map, false);//может ходить если пусто
-                FindPosiblePositionsInDirection(result, -1, 1, map, true);//может есть, но не ходить
+                FindPosiblePositionsInDirection(result, 1, 0, map, false);//может ходить если пусто
+                FindPosiblePositionsInDirection(result, 1, -1, map, true);//может есть, но не ходить
                 FindPosiblePositionsInDirection(result, 1, 1, map, true);//может есть, но не ходить
                 if (IsFirstStep)
-                    FindPosiblePositionsInDirection(result, 0, 2, map, false);//может ходить если пусто
+                    FindPosiblePositionsInDirection(result, 2, 0, map, false);//может ходить если пусто
             }
             else
             {
-                FindPosiblePositionsInDirection(result, 0, -1, map, false);//может ходить если пусто
+                FindPosiblePositionsInDirection(result, -1, 0, map, false);//может ходить если пусто
                 FindPosiblePositionsInDirection(result, -1, -1, map, true);//может есть, но не ходить
-                FindPosiblePositionsInDirection(result, 1, -1, map, true);//может есть, но не ходить
+                FindPosiblePositionsInDirection(result, -1, 1, map, true);//может есть, но не ходить
                 if (IsFirstStep)
-                    FindPosiblePositionsInDirection(result, 0, -2, map, false);//может ходить если пусто
+                    FindPosiblePositionsInDirection(result, -2, 0, map, false);//может ходить если пусто
             }
             return result;
         }
