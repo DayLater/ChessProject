@@ -10,22 +10,20 @@ namespace ChessProject.Figures
     [TestFixture]
     public class TestPawn
     {
-        Player whitePlayer = new Player(PlayerColor.White);
-        Player blackPlayer = new Player(PlayerColor.Black);
-
-       
+        readonly Player whitePlayer = new Player(PlayerColor.White);
+        readonly Player blackPlayer = new Player(PlayerColor.Black);
 
         [Test]
         public void FindPosibleWaysWithoutEnemies()
         {
             IFigure[,] map = new IFigure[8, 8];
-            Pawn pawn = new Pawn(new Position(0, 6), whitePlayer);
+            Pawn pawn = new Pawn(new Position(6, 0), whitePlayer);
             var expected = new[]
             {
-               new Position(0, 5), new Position(0, 4)
+               new Position(5, 0), new Position(4, 0)
             };
             
-            map[0, 6] = pawn;
+            map[6, 0] = pawn;
             var result = pawn.FindPosibleWays(map);
             Assert.That(result.ToArray(), Is.EquivalentTo(expected));
         }
@@ -34,17 +32,18 @@ namespace ChessProject.Figures
         public void FindPosibleWaysWithEnemies()
         {
             IFigure[,] map = new IFigure[8, 8];
-            Elephant elephant1 = new Elephant(new Position(1, 2), whitePlayer);
-            Elephant elephant2 = new Elephant(new Position(3, 2), whitePlayer);
-            Pawn pawn = new Pawn(new Position(2, 1), blackPlayer);
+            Elephant elephant1 = new Elephant(new Position(2, 1), whitePlayer);
+            Elephant elephant2 = new Elephant(new Position(2, 3), whitePlayer);
+            Pawn pawn = new Pawn(new Position(1, 2), blackPlayer);
             var expected = new[]
             {
-               new Position(1, 2), new Position(3, 2), new Position(2, 2), new Position(2, 3)
+               new Position(2, 1), new Position(2, 3),
+               new Position(2, 2), new Position(3, 2)
             };
 
-            map[1, 2] = elephant1;
-            map[3, 2] = elephant2;
-            map[2, 1] = pawn;
+            map[2, 1] = elephant1;
+            map[2, 3] = elephant2;
+            map[1, 2] = pawn;
             var result = pawn.FindPosibleWays(map);
             Assert.That(result.ToArray(), Is.EquivalentTo(expected));
         }
