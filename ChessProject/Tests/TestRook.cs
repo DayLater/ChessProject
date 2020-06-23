@@ -10,8 +10,8 @@ namespace ChessProject.Figures
     [TestFixture]
     public class TestRook
     {
-        Player whitePlayer = new Player(PlayerColor.White);
-        Player blackPlayer = new Player(PlayerColor.Black);
+        readonly Player whitePlayer = new Player(PlayerColor.White);
+        readonly Player blackPlayer = new Player(PlayerColor.Black);
 
         [Test]
         public void FindPosibleWaysWithoutEnemies()

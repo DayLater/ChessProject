@@ -10,10 +10,8 @@ namespace ChessProject.Figures
     [TestFixture]
     public class TestPawn
     {
-        Player whitePlayer = new Player(PlayerColor.White);
-        Player blackPlayer = new Player(PlayerColor.Black);
-
-       
+        readonly Player whitePlayer = new Player(PlayerColor.White);
+        readonly Player blackPlayer = new Player(PlayerColor.Black);
 
         [Test]
         public void FindPosibleWaysWithoutEnemies()
@@ -39,7 +37,8 @@ namespace ChessProject.Figures
             Pawn pawn = new Pawn(new Position(2, 1), blackPlayer);
             var expected = new[]
             {
-               new Position(1, 2), new Position(3, 2), new Position(2, 2), new Position(2, 3)
+               new Position(1, 2), new Position(3, 2),
+               new Position(2, 2), new Position(2, 3)
             };
 
             map[1, 2] = elephant1;

@@ -10,9 +10,8 @@ namespace ChessProject.Figures
     [TestFixture]
     public class TestQueen
     {
-        Player whitePlayer = new Player(PlayerColor.White);
-        Player blackPlayer = new Player(PlayerColor.Black);
-
+        readonly Player whitePlayer = new Player(PlayerColor.White);
+        readonly Player blackPlayer = new Player(PlayerColor.Black);
 
         [Test]
         public void FindPosibleWaysWithoutEnemies()
@@ -33,7 +32,6 @@ namespace ChessProject.Figures
                 if (i != 5)
                     expected.Add(new Position(i, 1));
 
-            map = new IFigure[8, 8];
             map[5, 1] = queen;
             var result = queen.FindPosibleWays(map);
             Assert.That(result.ToArray(), Is.EquivalentTo(expected));
@@ -74,8 +72,8 @@ namespace ChessProject.Figures
             var result = queen.FindPosibleWays(map);
             var expected = new List<Position>()
             {
-                new Position(4,0), new Position(6, 0), new Position(4,2),
-                new Position(6,2), new Position(7,3), new Position(5, 0), new Position(5,2)
+                new Position(4, 0), new Position(6, 0), new Position(4, 2), new Position(5, 2),
+                new Position(6, 2), new Position(7, 3), new Position(5, 0)
             };
             for (int i = 0; i < 8; i++)
                 if (i != 5)
