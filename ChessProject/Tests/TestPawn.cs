@@ -13,11 +13,12 @@ namespace ChessProject.Figures
         Player whitePlayer = new Player(PlayerColor.White);
         Player blackPlayer = new Player(PlayerColor.Black);
 
-        IFigure[,] map = new IFigure[8, 8];
+       
 
         [Test]
         public void FindPosibleWaysWithoutEnemies()
         {
+            IFigure[,] map = new IFigure[8, 8];
             Pawn pawn = new Pawn(new Position(0, 6), whitePlayer);
             var expected = new[]
             {
@@ -32,17 +33,19 @@ namespace ChessProject.Figures
         [Test]
         public void FindPosibleWaysWithEnemies()
         {
+            IFigure[,] map = new IFigure[8, 8];
             Elephant elephant1 = new Elephant(new Position(1, 2), whitePlayer);
             Elephant elephant2 = new Elephant(new Position(3, 2), whitePlayer);
             Pawn pawn = new Pawn(new Position(2, 1), blackPlayer);
-            map[1, 2] = elephant1;
-            map[3, 2] = elephant2;
-            map[2, 1] = pawn;
-            var result = pawn.FindPosibleWays(map);
             var expected = new[]
             {
                new Position(1, 2), new Position(3, 2), new Position(2, 2), new Position(2, 3)
             };
+
+            map[1, 2] = elephant1;
+            map[3, 2] = elephant2;
+            map[2, 1] = pawn;
+            var result = pawn.FindPosibleWays(map);
             Assert.That(result.ToArray(), Is.EquivalentTo(expected));
         }
     }

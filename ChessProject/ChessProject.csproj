@@ -64,6 +64,7 @@
     <Compile Include="Tests\TestElephant.cs" />
     <Compile Include="Figures\IFigure.cs" />
     <Compile Include="Tests\TestHorse.cs" />
+    <Compile Include="Tests\TestKing.cs" />
     <Compile Include="Tests\TestPawn.cs" />
     <Compile Include="Game\GameForm.cs">
       <SubType>Form</SubType>
