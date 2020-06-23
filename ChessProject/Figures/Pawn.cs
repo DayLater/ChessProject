@@ -60,8 +60,22 @@ namespace ChessProject
                 }
                 else
                 {
-                    if (map[x, y] is null)
-                        positions.Add(new Position(x, y));
+                    if (dx == -2)
+                    {
+                        if (map[x, y] is null && map[x + 1, y] is null)
+                            positions.Add(new Position(x, y));
+
+                    }
+                    else if (dx == 2)
+                    {
+                        if (map[x, y] is null && map[x - 1, y] is null)
+                            positions.Add(new Position(x, y));
+                    }
+                    else
+                    {
+                        if (map[x, y] is null)
+                            positions.Add(new Position(x, y));
+                    }
                 }
             }
         }
