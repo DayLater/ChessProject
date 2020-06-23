@@ -8,36 +8,69 @@ namespace ChessProject
     {
         private readonly GameModel game = new GameModel();
         CellButton[,] buttons = new CellButton[8, 8];
-        CellButton prevButton;
+        Label currentPositionLabel;
+        Label currentPlayerLabel;
         IFigure prevFigure;
 
         public GameForm()
         {
-            Size = new Size(700, 700);
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                    buttons[i, j] = MakeButton(i, j);
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                    if (game.Map[i, j] is IFigure)
-                        buttons[i, j].Text = game.Map[i, j].Picture;
+            CreateFormAndButtons();
+            CreateLabels(new string[] { "A", "B", "C", "D", "E", "F", "G", "H" }, true);
+            CreateLabels(new string[] { "1", "2", "3", "4", "5", "6", "7", "8" }, false);
+            CreateLabelCurrentPosition();
+            CreateCurrentPlayerLabel();
             game.Start();
             SwapPlayers();
         }
 
 
+        void CreateCurrentPlayerLabel()
+        {
+            currentPlayerLabel = new Label();
+            currentPlayerLabel.Location = new Point(680, 50);
+            currentPlayerLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            currentPlayerLabel.Size = new Size(150, 50);
+            Controls.Add(currentPlayerLabel);
+        }
+
+        void CreateFormAndButtons()
+        {
+            Size = new Size(820, 720);
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                    buttons[i, j] = MakeButton(i, j);
+            UpdateMap();
+        }
+
+        void CreateLabels(string[] words, bool isWords)
+        {
+            if (words.Length != 8) throw new Exception();
+            for (int i = 0; i < 8; i++)
+            { 
+                var label = new Label();
+                if (isWords)
+                    label.Location = new Point(60+ i * 80, 620);
+                else label.Location = new Point(0, i * 80);
+                label.Size = new Size(40, 80);
+                label.Text = words[i]; 
+                label.Font = new Font("Times New Roman", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                Controls.Add(label);
+            }
+        }
+
         //метод меняющий местами блоки
         void SwapBlocks(object sender, EventArgs e)
         {
-            var pressedButton = sender as CellButton; //получили кпопку
-            IFigure currentFigure = game.Map[pressedButton.Position.X, pressedButton.Position.Y]; //получили фигуру
+            var pressedCell = sender as CellButton; //получили кпопку
+            IFigure currentFigure = game.Map[pressedCell.Position.X, pressedCell.Position.Y]; //получили фигуру
             //если фигура не пустая и при этом прошлой фигуры нет или прошлая фигура того же игрока, то
             if (currentFigure != null && (prevFigure == null || prevFigure.Player == currentFigure.Player))
             {
                 //если прошлая фигура все же есть и она того же игрока
                 if (prevFigure != null && prevFigure.Player == currentFigure.Player)
                     UpdateMap(); //обновляем карту, чтобы убрать зеленые возможные ходы прошлой фигуры
-                //если это первое нажатие на фигуру или выбрали фигуру того жи игрока
+                //если это первое нажатие на фигуру или выбрали фигуру того же игрока
                 if (prevFigure == null || prevFigure.Player == currentFigure.Player)
                 {
                     game.FindPosibleWays(currentFigure); //ищем возможные ходы
@@ -45,30 +78,71 @@ namespace ChessProject
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Green; //помечаем их зеленым
                         buttons[pos.X, pos.Y].Enabled = true; //даем возмонжость нажать на эти клетки
+                        if (game.Map[pos.X, pos.Y] is King) //если фигура король
+                        {
+                            buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
+                            buttons[pos.X, pos.Y].Enabled = false; //нельзя убить
+                        }
                     }
                     prevFigure = currentFigure; //запомнили фигуру
-                    pressedButton.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
+                    pressedCell.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
                 }
             }
             // Если нажали на пустую клетку или на фигуру противника 
             else if (currentFigure == null || currentFigure.Player != prevFigure.Player)
             {
-                //нашли новоую позицию
-                var newPos = new Position(pressedButton.Position.X, pressedButton.Position.Y);
+                var newPos = new Position(pressedCell.Position.X, pressedCell.Position.Y);//нашли новоую позицию
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
-                pressedButton.Text = prevButton.Text; //отразили это на экране
-                prevButton.Text = ""; //прошлую клетку очистили
                 UpdateMap(); //обновили карту 
-                prevFigure = null; //очистили прошую фигуру
                 SwapPlayers(); //Поменяли игроков местами
             }
-            prevButton = pressedButton;
+        }
+
+        void CreateLabelCurrentPosition()
+        {
+            currentPositionLabel = new Label();
+            currentPositionLabel.Location = new Point(680, 0);
+            currentPositionLabel.Size = new Size(150, 50);
+            currentPositionLabel.Text = "Позиция: "; 
+            currentPositionLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Controls.Add(currentPositionLabel);
+        }
+
+        void ShowCurrentPosition(object sender, EventArgs e)
+        {
+            var btn = sender as CellButton;
+            var pos = "";
+            switch (btn.Position.Y)
+            {
+                case 0: pos += "A";
+                    break;
+                case 1: pos += "B";
+                    break;
+                case 2: pos += "C";
+                    break;
+                case 3: pos += "D";
+                    break;
+                case 4: pos += "E";
+                    break;
+                case 5: pos += "F";
+                    break;
+                case 6: pos += "G";
+                    break;
+                case 7: pos += "H";
+                    break;
+            }
+            currentPositionLabel.Text = "Позиция: ";
+            currentPositionLabel.Text += pos + (btn.Position.X + 1);
         }
 
         //метод для активации кнопок конкретного игрока
         void SwapPlayers()
         {
+            prevFigure = null; //очистили прошую фигуру
             game.SwapPlayer(); //поменяли игроков местами
+            if (game.CurrentPlayer.Color == PlayerColor.White)
+                currentPlayerLabel.Text = "Ход белого игрока";
+            else currentPlayerLabel.Text = "Ход черного игрока";
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                 {
@@ -88,6 +162,10 @@ namespace ChessProject
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                 {
+                    if (game.Map[i, j] is IFigure)
+                        buttons[i, j].Text = game.Map[i, j].Picture;
+                    else buttons[i, j].Text = "";
+
                     var button = buttons[i, j];
                     if ((i + j) % 2 == 1) button.BackColor = Color.Brown;
                     else button.BackColor = Color.OldLace;
@@ -104,8 +182,9 @@ namespace ChessProject
             var size = new Size(80, 80);
             button.Size = size;
             button.Font = new Font("Times New Roman", 28F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button.Location = new Point(j * 80, i * 80);
+            button.Location = new Point(j * 80 + 40, i * 80);
             button.Click += SwapBlocks;
+            button.MouseHover += ShowCurrentPosition;
             button.Enabled = false;
             Controls.Add(button);
             return button;
