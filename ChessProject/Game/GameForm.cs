@@ -16,7 +16,7 @@ namespace ChessProject
         {
             CreateFormAndButtons();
             CreateLabels(new string[] { "A", "B", "C", "D", "E", "F", "G", "H" }, true);
-            CreateLabels(new string[] { "1", "2", "3", "4", "5", "6", "7", "8" }, false);
+            CreateLabels(new string[] { "8","7", "6", "5", "4", "3", "2",  "1" }, false);
             CreateLabelCurrentPosition();
             CreateCurrentPlayerLabel();
             game.Start();
@@ -46,10 +46,10 @@ namespace ChessProject
         {
             if (words.Length != 8) throw new Exception();
             for (int i = 0; i < 8; i++)
-            { 
+            {
                 var label = new Label();
                 if (isWords)
-                    label.Location = new Point(60+ i * 80, 620);
+                    label.Location = new Point(60 + i * 80, 620);
                 else label.Location = new Point(0, i * 80);
                 label.Size = new Size(40, 80);
                 label.Text = words[i]; 
@@ -78,11 +78,6 @@ namespace ChessProject
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Green; //помечаем их зеленым
                         buttons[pos.X, pos.Y].Enabled = true; //даем возмонжость нажать на эти клетки
-                        if (game.Map[pos.X, pos.Y] is King) //если фигура король
-                        {
-                            buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
-                            buttons[pos.X, pos.Y].Enabled = false; //нельзя убить
-                        }
                     }
                     prevFigure = currentFigure; //запомнили фигуру
                     pressedCell.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
@@ -94,6 +89,15 @@ namespace ChessProject
                 var newPos = new Position(pressedCell.Position.X, pressedCell.Position.Y);//нашли новоую позицию
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
+                game.FindPosibleWays(prevFigure); //ищем возможные ходы
+                foreach (var pos in game.PosiblePositions)
+                {
+                    if (game.Map[pos.X, pos.Y] is King) //если фигура король
+                    {
+                        buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
+                        buttons[pos.X, pos.Y].Enabled = false; //нельзя убить
+                    }
+                }
                 SwapPlayers(); //Поменяли игроков местами
             }
         }
@@ -132,7 +136,7 @@ namespace ChessProject
                     break;
             }
             currentPositionLabel.Text = "Позиция: ";
-            currentPositionLabel.Text += pos + (btn.Position.X + 1);
+            currentPositionLabel.Text += pos + (7 - btn.Position.X + 1);
         }
 
         //метод для активации кнопок конкретного игрока
@@ -191,3 +195,4 @@ namespace ChessProject
         }
     }
 }
+

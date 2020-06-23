@@ -16,6 +16,7 @@ namespace ChessProject
         Player black = new Player(PlayerColor.Black);
         public List<Position> PosiblePositions;
         public Player CurrentPlayer { get; private set; }
+        public bool IsShah { get; private set; }
 
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
