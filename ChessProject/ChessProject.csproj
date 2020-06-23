@@ -58,6 +58,9 @@
     <Compile Include="Figures\King.cs" />
     <Compile Include="Figures\Queen.cs" />
     <Compile Include="Figures\Rook.cs" />
+    <Compile Include="Game\CellButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Player\PlayerColor.cs" />
     <Compile Include="Figures\Elephant.cs" />
     <Compile Include="Figures\Pawn.cs" />

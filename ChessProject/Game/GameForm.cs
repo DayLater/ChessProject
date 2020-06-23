@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChessProject
@@ -11,8 +7,8 @@ namespace ChessProject
     class GameForm : Form
     {
         private readonly GameModel game = new GameModel();
-        Button[,] buttons = new Button[8, 8];
-        Button prevButton;
+        CellButton[,] buttons = new CellButton[8, 8];
+        CellButton prevButton;
         Color prevColor;
         IFigure prevFigure;
         bool IsClicked; 
@@ -26,50 +22,92 @@ namespace ChessProject
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                     if (game.Map[i, j] is IFigure)
-                        buttons[i, j].Text = game.Map[i,j].Picture;
+                        buttons[i, j].Text = game.Map[i, j].Picture;
+
+            game.Start();
+            MakeButtonsEnabled();
         }
+
 
         void SwapBlocks(object sender, EventArgs e)
         {
-            var pressedButton = sender as Button;
+            var pressedButton = sender as CellButton;
             IFigure currentFigure = game.Map[pressedButton.Location.Y / 80, pressedButton.Location.X / 80];
-            if (currentFigure != null)
+            if (currentFigure != null && (prevFigure == null || prevFigure.Player == currentFigure.Player))
             {
-                var list = currentFigure.FindPosibleWays(game.Map);
-                foreach (var pos in list)
+                if (prevFigure != null && prevFigure.Player == currentFigure.Player) 
+                    UpdateMap();
+                if (!IsClicked || prevFigure.Player == currentFigure.Player)
                 {
-                    buttons[pos.X, pos.Y].BackColor = Color.Yellow;
+                    game.FindPosibleWays(currentFigure);
+                    foreach (var pos in game.PosiblePositions)
+                    {
+                        buttons[pos.X, pos.Y].BackColor = Color.Green;
+                        buttons[pos.X, pos.Y].Enabled = true;
+                    }
+                    prevColor = pressedButton.BackColor;
+                    prevFigure = currentFigure;
+                    pressedButton.BackColor = Color.YellowGreen;
+                    IsClicked = true;
                 }
-                prevColor = pressedButton.BackColor;
-                pressedButton.BackColor = Color.Green;
-                IsClicked = true;
             }
-            else
+            else if (currentFigure == null || currentFigure.Player != prevFigure.Player)
             {
                 if (IsClicked)
                 {
-                    game.Map[pressedButton.Location.Y / 80, pressedButton.Location.X / 80] =
-                        game.Map[prevButton.Location.Y / 80, prevButton.Location.X / 80];
-                    game.Map[prevButton.Location.Y / 80, prevButton.Location.X / 80] = currentFigure;
+                    var newPos = new Position(pressedButton.Position.X, pressedButton.Position.Y);
+                    game.MakeTurn(newPos, prevFigure);
                     pressedButton.Text = prevButton.Text;
                     prevButton.Text = "";
                     prevButton.BackColor = prevColor;
                     IsClicked = false;
+                    UpdateMap();
+                    prevFigure = null;
+                    game.SwapPlayer();
+                    MakeButtonsEnabled();
                 }
             }
             prevButton = pressedButton;
         }
 
-        Button MakeButton(int i, int j)
+        void MakeButtonsEnabled()
         {
-            Button button = new Button();
-            if ((i + j) % 2 == 1) button.BackColor = System.Drawing.Color.Brown;
-            else button.BackColor = System.Drawing.Color.OldLace;
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    var figure = game.Map[i, j];
+                    if (figure != null)
+                    {
+                        if (figure.Player == game.CurrentPlayer)
+                            buttons[i, j].Enabled = true;
+                        else buttons[i, j].Enabled = false;
+                    }
+                }
+        }
+
+        void UpdateMap()
+        {
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    var button = buttons[i, j];
+                    if ((i + j) % 2 == 1) button.BackColor = Color.Brown;
+                    else button.BackColor = Color.OldLace;
+                    if (button.Text == "") button.Enabled = false;
+                }
+        }
+
+        CellButton MakeButton(int i, int j)
+        {
+            CellButton button = new CellButton(new Position( i, j));
+            if ((i + j) % 2 == 1) button.BackColor = Color.Brown;
+            else button.BackColor = Color.OldLace;
             var size = new Size(80, 80);
             button.Size = size;
             button.Font = new Font("Times New Roman", 28F, FontStyle.Regular, GraphicsUnit.Point, 204);
             button.Location = new Point(j * 80, i * 80);
             button.Click += SwapBlocks;
+            button.Enabled = false;
             Controls.Add(button);
             return button;
         }

@@ -14,9 +14,23 @@ namespace ChessProject
         //Игроки
         Player white = new Player(PlayerColor.White);
         Player black = new Player(PlayerColor.Black);
+        public List<Position> PosiblePositions;
+        public Player CurrentPlayer { get; private set; }
 
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
+
+
+        public void Start()
+        {
+            CurrentPlayer = white; 
+        }
+
+        public void SwapPlayer()
+        {
+            if (CurrentPlayer == white) CurrentPlayer = black;
+            else CurrentPlayer = white; 
+        }
 
         public GameModel()
         {
@@ -53,12 +67,12 @@ namespace ChessProject
         }
 
         //Метод для поиска пути конкретной фигуры
-        List<Position> FindPosibleWays(IFigure figure)
+        public void FindPosibleWays(IFigure figure)
         {
-            return figure.FindPosibleWays(Map);
+            PosiblePositions = figure.FindPosibleWays(Map);
         }
 
-        void MakeTurn(Position newPos, IFigure figure)
+        public void MakeTurn(Position newPos, IFigure figure)
         {
             Map[figure.Position.X, figure.Position.Y] = null;
             Map[newPos.X, newPos.Y] = figure;
