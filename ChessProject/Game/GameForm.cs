@@ -9,9 +9,7 @@ namespace ChessProject
         private readonly GameModel game = new GameModel();
         CellButton[,] buttons = new CellButton[8, 8];
         CellButton prevButton;
-        Color prevColor;
         IFigure prevFigure;
-        bool IsClicked; 
 
         public GameForm()
         {
@@ -23,55 +21,54 @@ namespace ChessProject
                 for (int j = 0; j < 8; j++)
                     if (game.Map[i, j] is IFigure)
                         buttons[i, j].Text = game.Map[i, j].Picture;
-
             game.Start();
-            MakeButtonsEnabled();
+            SwapPlayers();
         }
 
 
+        //метод меняющий местами блоки
         void SwapBlocks(object sender, EventArgs e)
         {
-            var pressedButton = sender as CellButton;
-            IFigure currentFigure = game.Map[pressedButton.Location.Y / 80, pressedButton.Location.X / 80];
+            var pressedButton = sender as CellButton; //получили кпопку
+            IFigure currentFigure = game.Map[pressedButton.Position.X, pressedButton.Position.Y]; //получили фигуру
+            //если фигура не пустая и при этом прошлой фигуры нет или прошлая фигура того же игрока, то
             if (currentFigure != null && (prevFigure == null || prevFigure.Player == currentFigure.Player))
             {
-                if (prevFigure != null && prevFigure.Player == currentFigure.Player) 
-                    UpdateMap();
-                if (!IsClicked || prevFigure.Player == currentFigure.Player)
+                //если прошлая фигура все же есть и она того же игрока
+                if (prevFigure != null && prevFigure.Player == currentFigure.Player)
+                    UpdateMap(); //обновляем карту, чтобы убрать зеленые возможные ходы прошлой фигуры
+                //если это первое нажатие на фигуру или выбрали фигуру того жи игрока
+                if (prevFigure == null || prevFigure.Player == currentFigure.Player)
                 {
-                    game.FindPosibleWays(currentFigure);
+                    game.FindPosibleWays(currentFigure); //ищем возможные ходы
                     foreach (var pos in game.PosiblePositions)
                     {
-                        buttons[pos.X, pos.Y].BackColor = Color.Green;
-                        buttons[pos.X, pos.Y].Enabled = true;
+                        buttons[pos.X, pos.Y].BackColor = Color.Green; //помечаем их зеленым
+                        buttons[pos.X, pos.Y].Enabled = true; //даем возмонжость нажать на эти клетки
                     }
-                    prevColor = pressedButton.BackColor;
-                    prevFigure = currentFigure;
-                    pressedButton.BackColor = Color.YellowGreen;
-                    IsClicked = true;
+                    prevFigure = currentFigure; //запомнили фигуру
+                    pressedButton.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
                 }
             }
+            // Если нажали на пустую клетку или на фигуру противника 
             else if (currentFigure == null || currentFigure.Player != prevFigure.Player)
             {
-                if (IsClicked)
-                {
-                    var newPos = new Position(pressedButton.Position.X, pressedButton.Position.Y);
-                    game.MakeTurn(newPos, prevFigure);
-                    pressedButton.Text = prevButton.Text;
-                    prevButton.Text = "";
-                    prevButton.BackColor = prevColor;
-                    IsClicked = false;
-                    UpdateMap();
-                    prevFigure = null;
-                    game.SwapPlayer();
-                    MakeButtonsEnabled();
-                }
+                //нашли новоую позицию
+                var newPos = new Position(pressedButton.Position.X, pressedButton.Position.Y);
+                game.MakeTurn(newPos, prevFigure); //сделали туда ход
+                pressedButton.Text = prevButton.Text; //отразили это на экране
+                prevButton.Text = ""; //прошлую клетку очистили
+                UpdateMap(); //обновили карту 
+                prevFigure = null; //очистили прошую фигуру
+                SwapPlayers(); //Поменяли игроков местами
             }
             prevButton = pressedButton;
         }
 
-        void MakeButtonsEnabled()
+        //метод для активации кнопок конкретного игрока
+        void SwapPlayers()
         {
+            game.SwapPlayer(); //поменяли игроков местами
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                 {
@@ -85,6 +82,7 @@ namespace ChessProject
                 }
         }
 
+        //метод обновления карты до нормального состояния
         void UpdateMap()
         {
             for (int i = 0; i < 8; i++)
@@ -97,6 +95,7 @@ namespace ChessProject
                 }
         }
 
+        //метод, создающий кнопку
         CellButton MakeButton(int i, int j)
         {
             CellButton button = new CellButton(new Position( i, j));

@@ -20,10 +20,9 @@ namespace ChessProject
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
 
-
         public void Start()
         {
-            CurrentPlayer = white; 
+            CurrentPlayer = black; 
         }
 
         public void SwapPlayer()
