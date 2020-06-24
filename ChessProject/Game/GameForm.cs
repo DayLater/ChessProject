@@ -23,7 +23,6 @@ namespace ChessProject
             SwapPlayers();
         }
 
-
         void CreateCurrentPlayerLabel()
         {
             currentPlayerLabel = new Label();
@@ -96,6 +95,8 @@ namespace ChessProject
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
                         buttons[pos.X, pos.Y].Enabled = false; //нельзя убить
+                        if (game.IsMate((King)game.Map[pos.X, pos.Y], pressedCell.Position))
+                            MessageBox.Show("ШАХ И МАТ!");
                     }
                 }
                 SwapPlayers(); //Поменяли игроков местами

@@ -78,5 +78,53 @@ namespace ChessProject
             Map[newPos.X, newPos.Y] = figure;
             figure.Move(newPos);
         }
+
+        public bool IsMate(King king, Position previosPosition) 
+        {
+            var posiblePositions = king.FindPosibleWays(Map);
+            var player = king.Player;
+            var enemy = player.Equals(white) ? black : white;
+            var listPositionsPlayer = new List<Position>();
+            var listPositionEnemy = new List<Position>();
+            var path = new List<Position>();
+            //foreach (var item in collection)
+            //{
+            //    path.Add(previosPosition);
+            //}
+            //PosiblePositions.CopyTo(path);//путь того кто сделал шах
+            if (posiblePositions.Count == 0)
+            {
+                foreach (var cell in Map)
+                {
+                    if (cell.Player.Equals(player)) 
+                    {
+                        if (cell is Pawn)
+                        {
+
+                        }
+                        listPositionsPlayer.AddRange(cell.FindPosibleWays(Map));
+                    }
+                    if (cell.Player.Equals(enemy)) 
+                    {
+                        if (cell is Horse)
+                        { 
+                            
+                        }
+                        else
+                        listPositionEnemy.AddRange(cell.FindPosibleWays(Map));
+                    }
+                }
+                listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
+                listPositionEnemy = listPositionEnemy.Distinct().ToList();
+                foreach (var p in listPositionsPlayer)
+                {
+                    if (path.Contains(p))
+                        return false;
+                }
+
+                return true;
+            }
+            return false;
+        }
     }
 }
