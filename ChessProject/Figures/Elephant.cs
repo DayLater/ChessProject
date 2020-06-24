@@ -9,18 +9,17 @@ namespace ChessProject
 {
     public class Elephant : IFigure
     {
-        public Position Position { get; set; }
+        public Position Position { get; private set; }
         public Player Player { get; }
-        public bool IsAlive { get; }
         public string Picture => Player.Color == PlayerColor.Black? "♝" : "♗";
+
         public void Move(Position newPosition) => Position = newPosition;
+
         public Elephant(Position position, Player player)
         {
             Position = position;
             Player = player;
-            IsAlive = true;
         }
-
 
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
