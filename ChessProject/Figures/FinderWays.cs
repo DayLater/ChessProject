@@ -8,7 +8,8 @@ namespace ChessProject
 {
     public static class FinderWays
     {
-        public static void FindPosiblePositionsInDirection(this IFigure figure, List<Position> positions, int dx, int dy, IFigure[,] map)
+        public static void FindPosiblePositionsInDirection(this IFigure figure, List<Position> positions, 
+            int dx, int dy, IFigure[,] map, Func<IFigure, bool> selector)
         {
             int x = figure.Position.X + dx;
             int y = figure.Position.Y + dy;
@@ -18,7 +19,7 @@ namespace ChessProject
                     positions.Add(new Position(x, y));
                 else
                 {
-                    if (map[x, y].Player != figure.Player)
+                    if (selector(map[x,y]))
                         positions.Add(new Position(x, y));
                     break;
                 }

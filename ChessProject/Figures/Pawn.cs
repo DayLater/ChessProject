@@ -28,29 +28,20 @@ namespace ChessProject
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
             var result = new List<Position>();
-            if (Player.Color.Equals(PlayerColor.Black))
-            {
-                FindPosiblePositionsInDirection(result, 1, 0, map, false);//может ходить если пусто
-                FindPosiblePositionsInDirection(result, 1, -1, map, true);//может есть, но не ходить
-                FindPosiblePositionsInDirection(result, 1, 1, map, true);//может есть, но не ходить
-                if (IsFirstStep)
-                    FindPosiblePositionsInDirection(result, 2, 0, map, false);//может ходить если пусто
-            }
-            else
-            {
-                FindPosiblePositionsInDirection(result, -1, 0, map, false);//может ходить если пусто
-                FindPosiblePositionsInDirection(result, -1, -1, map, true);//может есть, но не ходить
-                FindPosiblePositionsInDirection(result, -1, 1, map, true);//может есть, но не ходить
-                if (IsFirstStep)
-                    FindPosiblePositionsInDirection(result, -2, 0, map, false);//может ходить если пусто
-            }
+            var dx = -1; 
+            if (Player.Color.Equals(PlayerColor.Black)) dx = 1;
+            FindPosiblePositionsInDirection(result, dx, 0, map, false);//может ходить если пусто
+            FindPosiblePositionsInDirection(result, dx, -1, map, true);//может есть, но не ходить
+            FindPosiblePositionsInDirection(result, dx, 1, map, true);//может есть, но не ходить
+            if (IsFirstStep)
+                FindPosiblePositionsInDirection(result, dx * 2, 0, map, false);//может ходить если пусто
             return result;
         }
+
         void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map, bool eat)
         {
             int x = Position.X + dx;
             int y = Position.Y + dy;
-
             if (x >= 0 && x < 8 && y >= 0 && y < 8)
             {
                 if (eat)
@@ -78,6 +69,24 @@ namespace ChessProject
                     }
                 }
             }
+        }
+
+        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        {
+            var result = new List<Position>();
+            var dx = -1; 
+            if (Player.Color.Equals(PlayerColor.Black)) dx = 1;
+            FindUnacceptablePositionsInDirection(result, dx, -1);//может есть, но не ходить
+            FindUnacceptablePositionsInDirection(result, dx, 1);//может есть, но не ходить
+            return result;
+        }
+
+        void FindUnacceptablePositionsInDirection(List<Position> positions, int dx, int dy)
+        {
+            int x = Position.X + dx;
+            int y = Position.Y + dy;
+            if (x >= 0 && x < 8 && y >= 0 && y < 8)
+                positions.Add(new Position(x, y));
         }
     }
 }

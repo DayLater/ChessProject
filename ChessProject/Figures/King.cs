@@ -25,8 +25,21 @@ namespace ChessProject
                 for (int j = -1; j < 2; j++)
                     if (!(i == j && i == 0))
                         FindPosiblePositionsInDirection(result, i, j, map);
-            return result;
+
+            var unacceptablePositions = new List<Position>();
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    var figure = map[i, j];
+                    if (figure is IFigure && figure.Player != Player && !(figure is King))
+                        unacceptablePositions.AddRange(figure.UnacceptablePositionsForKing(map)); 
+                }
+            unacceptablePositions.Distinct();
+            var list = result.Except(unacceptablePositions).ToList();
+            return list;
         }
+
+
         //ищем позиции в одном направлении
         void FindPosiblePositionsInDirection(List<Position> result, int dx, int dy, IFigure[,] map)
         {
@@ -36,12 +49,14 @@ namespace ChessProject
             {                    
                 if (map[x, y] is null)
                     result.Add(new Position(x, y));
-                else
-                {
-                    if (map[x, y].Player != Player)
+                else if (map[x, y].Player != Player)
                         result.Add(new Position(x, y));
-                }
             }
+        }
+
+        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        {
+           return new List<Position>();
         }
     }
 }

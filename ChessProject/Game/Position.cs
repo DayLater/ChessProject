@@ -26,6 +26,11 @@ namespace ChessProject
             return X == pos.X && Y == pos.Y;
         }
 
+        public override int GetHashCode()
+        {
+            return ((X + 1) * 30549 + (Y + 1) * 101) % 9154981;
+        }
+
         public override string ToString()
         {
             return String.Format("X = {0}, Y = {1}", X, Y);

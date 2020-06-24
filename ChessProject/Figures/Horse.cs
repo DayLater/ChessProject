@@ -19,20 +19,18 @@ namespace ChessProject
             Player = player;
             IsAlive = true;
         }
+
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
-            var result = new List<Position>();
-            FindPosiblePositionsInDirection(result, -1, -2, map);
-            FindPosiblePositionsInDirection(result, -2, -1, map);
-            FindPosiblePositionsInDirection(result, 1, -2, map);
-            FindPosiblePositionsInDirection(result, 2, -1, map);
-            FindPosiblePositionsInDirection(result, -2, 1, map);
-            FindPosiblePositionsInDirection(result, -1, 2, map);
-            FindPosiblePositionsInDirection(result, 2, 1, map);
-            FindPosiblePositionsInDirection(result, 1, 2, map);
-            return result;
+            return FindPosibleWaysBySelector(map, figure => figure.Player != Player);
         }
-        public void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map)
+
+        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        {
+            return FindPosibleWaysBySelector(map, figure => true);
+        }
+
+        public void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map, Func<IFigure, bool> selector)
         {
             int x = Position.X + dx;
             int y = Position.Y + dy;
@@ -40,12 +38,18 @@ namespace ChessProject
             {
                 if (map[x, y] is null)
                     positions.Add(new Position(x, y));
-                else
-                {
-                    if (map[x, y].Player != this.Player)
+                else if (selector(map[x, y]))
                         positions.Add(new Position(x, y));
-                }
             }
+        }
+
+        public List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector)
+        {
+            var result = new List<Position>();
+            (int, int)[] positions = { (-1, -2), (-2, -1), (1, -2), (2, -1), (-2, 1), (-1, 2), (2, 1), (1, 2) };
+            for (int i = 0; i < positions.Length; i++)
+                FindPosiblePositionsInDirection(result, positions[i].Item1, positions[i].Item2, map, selector);
+            return result;
         }
     }
 }

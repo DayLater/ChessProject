@@ -15,5 +15,6 @@ namespace ChessProject
         string Picture { get; }
         void Move(Position newPosition);
         List<Position> FindPosibleWays(IFigure[,] map);
+        List<Position> UnacceptablePositionsForKing(IFigure[,] map); 
     }
 }
