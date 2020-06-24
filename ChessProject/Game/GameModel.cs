@@ -1,4 +1,5 @@
 ﻿using ChessProject.Figures;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,13 +24,13 @@ namespace ChessProject
 
         public void Start()
         {
-            CurrentPlayer = black; 
+            CurrentPlayer = black;
         }
 
         public void SwapPlayer()
         {
             if (CurrentPlayer == white) CurrentPlayer = black;
-            else CurrentPlayer = white; 
+            else CurrentPlayer = white;
         }
 
         public GameModel()
@@ -38,7 +39,7 @@ namespace ChessProject
         }
 
         //Метод для заполнения карты фигурами
-        void CreateMap() 
+        void CreateMap()
         {
             AddOneSide(white);
             AddOneSide(black);
@@ -79,52 +80,79 @@ namespace ChessProject
             figure.Move(newPos);
         }
 
-        public bool IsMate(King king, Position previosPosition) 
+        public bool IsMate(King king, IFigure figure)
         {
             var posiblePositions = king.FindPosibleWays(Map);
             var player = king.Player;
-            var enemy = player.Equals(white) ? black : white;
             var listPositionsPlayer = new List<Position>();
-            var listPositionEnemy = new List<Position>();
-            var path = new List<Position>();
-            //foreach (var item in collection)
-            //{
-            //    path.Add(previosPosition);
-            //}
-            //PosiblePositions.CopyTo(path);//путь того кто сделал шах
+            var path = GetPositionsForking(king, figure);
             if (posiblePositions.Count == 0)
             {
                 foreach (var cell in Map)
                 {
-                    if (cell.Player.Equals(player)) 
+                    if (cell != null && cell.Player.Equals(player))
                     {
-                        if (cell is Pawn)
-                        {
-
-                        }
                         listPositionsPlayer.AddRange(cell.FindPosibleWays(Map));
-                    }
-                    if (cell.Player.Equals(enemy)) 
-                    {
-                        if (cell is Horse)
-                        { 
-                            
-                        }
-                        else
-                        listPositionEnemy.AddRange(cell.FindPosibleWays(Map));
                     }
                 }
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
-                listPositionEnemy = listPositionEnemy.Distinct().ToList();
                 foreach (var p in listPositionsPlayer)
-                {
-                    if (path.Contains(p))
-                        return false;
-                }
-
+                    if (path.Contains(p)) return false;
                 return true;
             }
             return false;
+        }
+
+        List<Position> GetPositionsForking(King king, IFigure figure)
+        {
+            var result = new List<Position>();
+            var path = figure.FindPosibleWays(Map);
+            if (!(figure is Horse))
+            {
+                if (king.Position.X > figure.Position.X)
+                {
+                    if (king.Position.Y > figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X > figure.Position.X && p.Y > figure.Position.Y).ToList();
+                    }
+                    if (king.Position.Y < figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X > figure.Position.X && p.Y < figure.Position.Y).ToList();
+                    }
+                    if (king.Position.Y == figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X > figure.Position.X && p.Y == figure.Position.Y).ToList();
+                    }
+                }
+                if (king.Position.X < figure.Position.X)
+                {
+                    if (king.Position.Y > figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X < figure.Position.X && p.Y > figure.Position.Y).ToList();
+                    }
+                    if (king.Position.Y < figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X < figure.Position.X && p.Y < figure.Position.Y).ToList();
+                    }
+                    if (king.Position.Y == figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X < figure.Position.X && p.Y == figure.Position.Y).ToList();
+                    }
+                }
+                if (king.Position.X == figure.Position.X)
+                {
+                    if (king.Position.Y > figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X == figure.Position.X && p.Y > figure.Position.Y).ToList();
+                    }
+                    if (king.Position.Y < figure.Position.Y)
+                    {
+                        result = path.Where(p => p.X == figure.Position.X && p.Y < figure.Position.Y).ToList();
+                    }
+                }
+            }
+            result.Add(figure.Position);
+            return result;
         }
     }
 }

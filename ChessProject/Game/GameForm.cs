@@ -90,17 +90,22 @@ namespace ChessProject
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
+                var previousFigure = prevFigure;
+                
                 foreach (var pos in game.PosiblePositions)
                 {
                     if (game.Map[pos.X, pos.Y] is King) //если фигура король
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
                         buttons[pos.X, pos.Y].Enabled = false; //нельзя убить
-                        if (game.IsMate((King)game.Map[pos.X, pos.Y], pressedCell.Position))
-                            MessageBox.Show("ШАХ И МАТ!");
+                        if (game.IsMate((King)game.Map[pos.X, pos.Y], previousFigure))
+                        MessageBox.Show("ШАХ И МАТ!", "Сообщение",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
                     }
                 }
-                SwapPlayers(); //Поменяли игроков местами
+                //Поменяли игроков местами
+                SwapPlayers();
             }
         }
 
