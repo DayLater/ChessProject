@@ -59,12 +59,23 @@ namespace ChessProject
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
+                var previosFigure = prevFigure;
                 foreach (var pos in game.PosiblePositions)
                 {
                     if (game.Map[pos.X, pos.Y] is King) //если фигура король
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
                         buttons[pos.X, pos.Y].Enabled = false; //нельзя убитьМОже
+                        if (game.IsMate((King)game.Map[pos.X, pos.Y], previosFigure)) 
+                        {
+                            MessageBox.Show(
+                            "Шах и мат, аметисты!",
+                            "Игра окончена",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                        }
                     }
                 }
                 SwapPlayers(); //Поменяли игроков местами
