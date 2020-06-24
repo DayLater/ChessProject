@@ -8,11 +8,11 @@ namespace ChessProject
 {
     public class Queen : IFigure
     {
-        public Position Position { get; set; }
+        public Position Position { get; private set; }
         public Player Player { get;  }
-        public bool IsAlive { get; set; }
         public string Picture => Player.Color == PlayerColor.Black ? "♛" : "♕";
         public void Move(Position newPosition) => Position = newPosition;
+
         public Queen(Position position, Player player)
         {
             Position = position;
@@ -28,7 +28,8 @@ namespace ChessProject
         {
             return FindPosibleWaysBySelector(map, (figure) => true);
         }        
-        
+
+        //вспомогательный метод для того, чтобы не писать один и тот же код два раза
         List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector)
         {
             var result = new List<Position>();

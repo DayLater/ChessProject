@@ -8,7 +8,7 @@ namespace ChessProject
     class GameForm : Form
     {
         private readonly GameModel game = new GameModel();
-        CellButton[,] buttons = new CellButton[8, 8];
+        readonly CellButton[,] buttons = new CellButton[8, 8];
         Label currentPositionLabel;
         Label currentPlayerLabel;
         IFigure prevFigure;
@@ -24,42 +24,11 @@ namespace ChessProject
             SwapPlayers();
         }
 
-        void CreateCurrentPlayerLabel()
-        {
-            currentPlayerLabel = new Label();
-            currentPlayerLabel.Location = new Point(680, 50);
-            currentPlayerLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            currentPlayerLabel.Size = new Size(150, 50);
-            Controls.Add(currentPlayerLabel);
-        }
-
-        void CreateFormAndButtons()
-        {
-            Size = new Size(820, 720);
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                    buttons[i, j] = MakeButton(i, j);
-            UpdateMap();
-        }
-
-        void CreateLabels(string[] words, bool isWords)
-        {
-            if (words.Length != 8) throw new Exception();
-            for (int i = 0; i < 8; i++)
-            {
-                var label = new Label();
-                if (isWords)
-                    label.Location = new Point(60 + i * 80, 620);
-                else label.Location = new Point(0, i * 80);
-                label.Size = new Size(40, 80);
-                label.Text = words[i]; 
-                label.Font = new Font("Times New Roman", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
-                label.TextAlign = ContentAlignment.MiddleCenter;
-                Controls.Add(label);
-            }
-        }
-
-        //метод меняющий местами блоки
+        /// <summary>
+        /// Основной метод игры. Используется, когда игрок делает ход
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void SwapBlocks(object sender, EventArgs e)
         {
             var pressedCell = sender as CellButton; //получили кпопку
@@ -90,25 +59,22 @@ namespace ChessProject
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
-                var previousFigure = prevFigure;
-                
                 foreach (var pos in game.PosiblePositions)
                 {
                     if (game.Map[pos.X, pos.Y] is King) //если фигура король
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
-                        buttons[pos.X, pos.Y].Enabled = false; //нельзя убить
-                        if (game.IsMate((King)game.Map[pos.X, pos.Y], previousFigure))
-                        MessageBox.Show("ШАХ И МАТ!", "Сообщение",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
+                        buttons[pos.X, pos.Y].Enabled = false; //нельзя убитьМОже
                     }
                 }
-                //Поменяли игроков местами
-                SwapPlayers();
+                SwapPlayers(); //Поменяли игроков местами
             }
         }
 
+        #region Создание кнопок, label-текста и прочее, не влияющее на игру
+        /// <summary>
+        /// Метод создания Label для выведения информации о текущей позиции мыши
+        /// </summary>
         void CreateLabelCurrentPosition()
         {
             currentPositionLabel = new Label();
@@ -119,35 +85,119 @@ namespace ChessProject
             Controls.Add(currentPositionLabel);
         }
 
+        /// <summary>
+        /// Метод показывающий текущую позицию на экране. Используется в событии наведения мыши
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ShowCurrentPosition(object sender, EventArgs e)
         {
             var btn = sender as CellButton;
             var pos = "";
             switch (btn.Position.Y)
             {
-                case 0: pos += "A";
+                case 0:
+                    pos += "A";
                     break;
-                case 1: pos += "B";
+                case 1:
+                    pos += "B";
                     break;
-                case 2: pos += "C";
+                case 2:
+                    pos += "C";
                     break;
-                case 3: pos += "D";
+                case 3:
+                    pos += "D";
                     break;
-                case 4: pos += "E";
+                case 4:
+                    pos += "E";
                     break;
-                case 5: pos += "F";
+                case 5:
+                    pos += "F";
                     break;
-                case 6: pos += "G";
+                case 6:
+                    pos += "G";
                     break;
-                case 7: pos += "H";
+                case 7:
+                    pos += "H";
                     break;
             }
             currentPositionLabel.Text = "Позиция: ";
             currentPositionLabel.Text += pos + (7 - btn.Position.X + 1);
-            
+
         }
 
-        //метод для активации кнопок конкретного игрока
+        /// <summary>
+        /// Метод создающий кнопку на форме
+        /// </summary>
+        /// <param name="i">кордината</param>
+        /// <param name="j">координата</param>
+        /// <returns></returns>
+        CellButton MakeButton(int i, int j)
+        {
+            CellButton button = new CellButton(new Position(i, j));
+            if ((i + j) % 2 == 1) button.BackColor = Color.Brown;
+            else button.BackColor = Color.OldLace;
+            var size = new Size(80, 80);
+            button.Size = size;
+            button.Font = new Font("Times New Roman", 28F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button.Location = new Point(j * 80 + 40, i * 80);
+            button.Click += SwapBlocks;
+            button.MouseEnter += ShowCurrentPosition;
+            button.Enabled = false;
+            Controls.Add(button);
+            return button;
+        }
+
+        /// <summary>
+        /// Создание лейбла для вывода информации о текущем игроке
+        /// </summary>
+        void CreateCurrentPlayerLabel()
+        {
+            currentPlayerLabel = new Label();
+            currentPlayerLabel.Location = new Point(680, 50);
+            currentPlayerLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            currentPlayerLabel.Size = new Size(150, 50);
+            Controls.Add(currentPlayerLabel);
+        }
+
+        /// <summary>
+        /// Метод создания формы и карты
+        /// </summary>
+        void CreateFormAndButtons()
+        {
+            Size = new Size(820, 720);
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                    buttons[i, j] = MakeButton(i, j);
+            UpdateMap();
+        }
+
+        /// <summary>
+        /// Метод для создания боковых обозначений позиции
+        /// </summary>
+        /// <param name="words"></param>
+        /// <param name="isWords"></param>
+        void CreateLabels(string[] words, bool isWords)
+        {
+            if (words.Length != 8) throw new Exception();
+            for (int i = 0; i < 8; i++)
+            {
+                var label = new Label();
+                if (isWords)
+                    label.Location = new Point(60 + i * 80, 620);
+                else label.Location = new Point(0, i * 80);
+                label.Size = new Size(40, 80);
+                label.Text = words[i];
+                label.Font = new Font("Times New Roman", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                Controls.Add(label);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Метод, менящий действующего игрока
+        /// </summary>
         void SwapPlayers()
         {
             prevFigure = null; //очистили прошую фигуру
@@ -168,7 +218,10 @@ namespace ChessProject
                 }
         }
 
-        //метод обновления карты до нормального состояния
+        /// <summary>
+        /// Метод для обновления карты
+        /// Используется только после хода игрока
+        /// </summary>
         void UpdateMap()
         {
             for (int i = 0; i < 8; i++)
@@ -185,6 +238,10 @@ namespace ChessProject
                 }
         }
 
+        /// <summary>
+        /// Метод для возврата цвета клеток к нормальному от зеленого
+        /// </summary>
+        /// <param name="p"></param>
         void UpdateColorPosition(Position p) 
         {
             var list = game.PosiblePositions;
@@ -197,22 +254,6 @@ namespace ChessProject
             }
         }
 
-        //метод, создающий кнопку
-        CellButton MakeButton(int i, int j)
-        {
-            CellButton button = new CellButton(new Position( i, j));
-            if ((i + j) % 2 == 1) button.BackColor = Color.Brown;
-            else button.BackColor = Color.OldLace;
-            var size = new Size(80, 80);
-            button.Size = size;
-            button.Font = new Font("Times New Roman", 28F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button.Location = new Point(j * 80 + 40, i * 80);
-            button.Click += SwapBlocks;
-            button.MouseEnter += ShowCurrentPosition;
-            button.Enabled = false;
-            Controls.Add(button);
-            return button;
-        }
     }
 }
 
