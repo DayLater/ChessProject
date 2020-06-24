@@ -67,9 +67,9 @@ namespace ChessProject
             //если фигура не пустая и при этом прошлой фигуры нет или прошлая фигура того же игрока, то
             if (currentFigure != null && (prevFigure == null || prevFigure.Player == currentFigure.Player))
             {
-                //если прошлая фигура все же есть и она того же игрока
-                if (prevFigure != null && prevFigure.Player == currentFigure.Player)
-                    UpdateMap(); //обновляем карту, чтобы убрать зеленые возможные ходы прошлой фигуры
+                //если прошлая фигура все же есть и она того же игрока. При этом game.PosiblePositions не пуст
+                if (prevFigure != null && prevFigure.Player == currentFigure.Player && game.PosiblePositions!=null)
+                    UpdateColorPosition(prevFigure.Position); //убиоаем зеленые возможные ходы прошлой фигуры
                 //если это первое нажатие на фигуру или выбрали фигуру того же игрока
                 if (prevFigure == null || prevFigure.Player == currentFigure.Player)
                 {
@@ -137,8 +137,8 @@ namespace ChessProject
             }
             currentPositionLabel.Text = "Позиция: ";
             currentPositionLabel.Text += pos + (7 - btn.Position.X + 1);
+            
         }
-
         //метод для активации кнопок конкретного игрока
         void SwapPlayers()
         {
@@ -176,7 +176,17 @@ namespace ChessProject
                     if (button.Text == "") button.Enabled = false;
                 }
         }
-
+        void UpdateColorPosition(Position p) 
+        {
+            var list = game.PosiblePositions;
+            list.Add(p);
+            foreach (var cell in list)
+            {
+                if ((cell.X + cell.Y) % 2 == 1) buttons[cell.X, cell.Y].BackColor = Color.Brown;
+                else buttons[cell.X, cell.Y].BackColor = Color.OldLace;
+                if (buttons[cell.X, cell.Y].Text == "") buttons[cell.X, cell.Y].Enabled = false;
+            }
+        }
         //метод, создающий кнопку
         CellButton MakeButton(int i, int j)
         {
@@ -188,7 +198,7 @@ namespace ChessProject
             button.Font = new Font("Times New Roman", 28F, FontStyle.Regular, GraphicsUnit.Point, 204);
             button.Location = new Point(j * 80 + 40, i * 80);
             button.Click += SwapBlocks;
-            button.MouseHover += ShowCurrentPosition;
+            button.MouseEnter += ShowCurrentPosition;
             button.Enabled = false;
             Controls.Add(button);
             return button;
