@@ -19,13 +19,24 @@ namespace ChessProject
             Player = player;
             IsAlive = true;
         }
+
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
+            return FindPosibleWaysBySelector(map, figure => figure.Player != Player);
+        }
+
+        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        {
+            return FindPosibleWaysBySelector(map, figure => true);
+        }
+
+        List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector)
+        {
             var result = new List<Position>();
-            this.FindPosiblePositionsInDirection(result, 0, 1, map);
-            this.FindPosiblePositionsInDirection(result, 0, -1, map);
-            this.FindPosiblePositionsInDirection(result, 1, 0, map);
-            this.FindPosiblePositionsInDirection(result, -1, 0, map);
+            this.FindPosiblePositionsInDirection(result, 0, 1, map, selector);
+            this.FindPosiblePositionsInDirection(result, 0, -1, map, selector);
+            this.FindPosiblePositionsInDirection(result, 1, 0, map, selector);
+            this.FindPosiblePositionsInDirection(result, -1, 0, map, selector);
             return result;
         }
     }

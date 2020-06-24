@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -22,7 +23,6 @@ namespace ChessProject
             game.Start();
             SwapPlayers();
         }
-
 
         void CreateCurrentPlayerLabel()
         {
@@ -68,8 +68,8 @@ namespace ChessProject
             if (currentFigure != null && (prevFigure == null || prevFigure.Player == currentFigure.Player))
             {
                 //если прошлая фигура все же есть и она того же игрока. При этом game.PosiblePositions не пуст
-                if (prevFigure != null && prevFigure.Player == currentFigure.Player && game.PosiblePositions!=null)
-                    UpdateColorPosition(prevFigure.Position); //убиоаем зеленые возможные ходы прошлой фигуры
+                if (prevFigure != null && prevFigure.Player == currentFigure.Player && game.PosiblePositions != null)
+                    UpdateColorPosition(prevFigure.Position);
                 //если это первое нажатие на фигуру или выбрали фигуру того же игрока
                 if (prevFigure == null || prevFigure.Player == currentFigure.Player)
                 {
@@ -139,6 +139,7 @@ namespace ChessProject
             currentPositionLabel.Text += pos + (7 - btn.Position.X + 1);
             
         }
+
         //метод для активации кнопок конкретного игрока
         void SwapPlayers()
         {
@@ -176,6 +177,7 @@ namespace ChessProject
                     if (button.Text == "") button.Enabled = false;
                 }
         }
+
         void UpdateColorPosition(Position p) 
         {
             var list = game.PosiblePositions;
@@ -187,6 +189,7 @@ namespace ChessProject
                 if (buttons[cell.X, cell.Y].Text == "") buttons[cell.X, cell.Y].Enabled = false;
             }
         }
+
         //метод, создающий кнопку
         CellButton MakeButton(int i, int j)
         {
