@@ -68,7 +68,7 @@ namespace ChessProject
                 for (int j = -1; j < 2; j++)
                     if (!(i == j && i == 0))
                         FindPosiblePositionsInDirection(allPosiblePositions, i, j,
-                            map, figure => figure.Player != Player); //здесь мы ищем ВСЕ допустимые ходы
+                            map, figure => true); //здесь мы ищем ВСЕ допустимые ходы
             return allPosiblePositions;
         }
     }
