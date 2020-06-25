@@ -21,6 +21,7 @@ namespace ChessProject
             CreateLabelCurrentPosition();
             CreateCurrentPlayerLabel();
             game.Start();
+            game.SwapPlayer();
             SwapPlayers();
         }
 

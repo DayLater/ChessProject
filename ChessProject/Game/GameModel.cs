@@ -24,7 +24,7 @@ namespace ChessProject
 
         public void Start()
         {
-            CurrentPlayer = black;
+            CurrentPlayer = white;
         }
 
         public void SwapPlayer()
