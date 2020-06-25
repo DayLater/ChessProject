@@ -84,6 +84,10 @@ namespace ChessProject
         {
             var figure = Map[figurePosition.X, figurePosition.Y];
             var positions = figure.FindPosibleWays(Map);
+            if (figure is Pawn)
+            {
+                positions = positions.Where(p => p.Y != figure.Position.Y).ToList();
+            }
             foreach (var pos in positions)
             {
                 if (Map[pos.X, pos.Y] is King && figure.Player != Map[pos.X, pos.Y].Player) //если  фигура чужой король
@@ -108,8 +112,11 @@ namespace ChessProject
             {
                 foreach (var cell in Map)
                 {
+
                     if (cell != null && cell.Player.Equals(player))
+                    {
                         listPositionsPlayer.AddRange(cell.FindPosibleWays(Map));
+                    }
                 }
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
                 foreach (var p in listPositionsPlayer)
@@ -152,7 +159,8 @@ namespace ChessProject
                                Func<Position, Position, bool> predicate)
         {
             if (predicate(kingPosition, figurePosition))
-                result = path.Where(p => predicate(p, figurePosition)).ToList();
+                foreach (var p in path.Where(p => predicate(p, figurePosition)))
+                    result.Add(p);
         }
     }
 }
