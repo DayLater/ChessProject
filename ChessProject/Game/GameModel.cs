@@ -79,6 +79,7 @@ namespace ChessProject
         }
         //Хранит позицию короля, которому сделали шах
         public Position KingPositionAtStake { get;private set; }
+
         //Есть ли шах
         public bool IsShah(Position figurePosition) 
         {
@@ -98,6 +99,7 @@ namespace ChessProject
             }
             return false;
         }
+
         //Есть ли мат
         public bool IsMate(Position kingPosition, Position figurePosition)
         {
