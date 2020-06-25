@@ -98,7 +98,7 @@ namespace ChessProject
         public bool IsMate(Position kingPosition, Position figurePosition)
         {
             if (!IsShah(figurePosition))
-                return true;
+                return false;
             var posiblePositions = Map[kingPosition.X, kingPosition.Y].FindPosibleWays(Map);
             var player = Map[kingPosition.X, kingPosition.Y].Player;
             var listPositionsPlayer = new List<Position>();
@@ -124,7 +124,7 @@ namespace ChessProject
             var result = new List<Position>();
             var figure = Map[figurePosition.X, figurePosition.Y];
             var path = figure.FindPosibleWays(Map);
-            if (!(figure is Horse))
+            if (!(figure is Horse) && !(figure is Pawn))
             {
                 SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
                     (k, f) => k.X > f.X && k.Y > f.Y);
