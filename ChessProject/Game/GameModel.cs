@@ -80,12 +80,12 @@ namespace ChessProject
             figure.Move(newPos);
         }
 
-        public bool IsMate(King king, IFigure figure)
+        public bool IsMate(Position kingPosition, Position figurePosition)
         {
-            var posiblePositions = king.FindPosibleWays(Map);
-            var player = king.Player;
+            var posiblePositions = Map[kingPosition.X, kingPosition.Y].FindPosibleWays(Map);
+            var player = Map[kingPosition.X, kingPosition.Y].Player;
             var listPositionsPlayer = new List<Position>();
-            var path = GetPositionsForking(king, figure);
+            var path = GetPositionsThreateningTheKing(kingPosition, figurePosition);
             if (posiblePositions.Count == 0)
             {
                 foreach (var cell in Map)
@@ -103,56 +103,40 @@ namespace ChessProject
             return false;
         }
 
-        List<Position> GetPositionsForking(King king, IFigure figure)
+        List<Position> GetPositionsThreateningTheKing(Position kingPosition, Position figurePosition)
         {
             var result = new List<Position>();
+            var figure = Map[figurePosition.X, figurePosition.Y];
             var path = figure.FindPosibleWays(Map);
             if (!(figure is Horse))
             {
-                if (king.Position.X > figure.Position.X)
-                {
-                    if (king.Position.Y > figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X > figure.Position.X && p.Y > figure.Position.Y).ToList();
-                    }
-                    if (king.Position.Y < figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X > figure.Position.X && p.Y < figure.Position.Y).ToList();
-                    }
-                    if (king.Position.Y == figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X > figure.Position.X && p.Y == figure.Position.Y).ToList();
-                    }
-                }
-                if (king.Position.X < figure.Position.X)
-                {
-                    if (king.Position.Y > figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X < figure.Position.X && p.Y > figure.Position.Y).ToList();
-                    }
-                    if (king.Position.Y < figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X < figure.Position.X && p.Y < figure.Position.Y).ToList();
-                    }
-                    if (king.Position.Y == figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X < figure.Position.X && p.Y == figure.Position.Y).ToList();
-                    }
-                }
-                if (king.Position.X == figure.Position.X)
-                {
-                    if (king.Position.Y > figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X == figure.Position.X && p.Y > figure.Position.Y).ToList();
-                    }
-                    if (king.Position.Y < figure.Position.Y)
-                    {
-                        result = path.Where(p => p.X == figure.Position.X && p.Y < figure.Position.Y).ToList();
-                    }
-                }
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                    (k, f) => k.X > f.X && k.Y > f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                    (k, f) => k.X > f.X && k.Y < f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                    (k, f) => k.X > f.X && k.Y == f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                   (k, f) => k.X < f.X && k.Y > f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                   (k, f) => k.X < f.X && k.Y < f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                    (k, f) => k.X < f.X && k.Y == f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                (k, f) => k.X == f.X && k.Y > f.Y);
+                SelectAListOfPositionsThreateningTheKing(kingPosition, figurePosition, path, result,
+                   (k, f) => k.X == f.X && k.Y < f.Y);
             }
             result.Add(figure.Position);
             return result;
+        }
+
+        void SelectAListOfPositionsThreateningTheKing(Position kingPosition, Position figurePosition,
+                               List<Position> path, List<Position> result,
+                               Func<Position, Position, bool> predicate)
+        {
+            if (predicate(kingPosition, figurePosition))
+                result = path.Where(p => predicate(p, figurePosition)).ToList();
         }
     }
 }

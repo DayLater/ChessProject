@@ -66,7 +66,7 @@ namespace ChessProject
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
                         buttons[pos.X, pos.Y].Enabled = false; //нельзя убитьМОже
-                        if (game.IsMate((King)game.Map[pos.X, pos.Y], previosFigure)) 
+                        if (game.IsMate(pos, previosFigure.Position)) 
                         {
                             MessageBox.Show(
                             "Шах и мат, аметисты!",
