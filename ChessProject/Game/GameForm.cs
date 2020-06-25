@@ -61,22 +61,19 @@ namespace ChessProject
                 UpdateMap(); //обновили карту 
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
                 var previosFigure = prevFigure;
-                foreach (var pos in game.PosiblePositions)
+                if (game.IsShah(prevFigure.Position)) 
                 {
-                    if (game.Map[pos.X, pos.Y] is King) //если фигура король
+                    buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].BackColor = Color.Red; //помечаем красным
+                    buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].Enabled = false; //нельзя убитьМОже
+                    if (game.IsMate(game.KingPositionAtStake, previosFigure.Position))
                     {
-                        buttons[pos.X, pos.Y].BackColor = Color.Red; //помечаем красным
-                        buttons[pos.X, pos.Y].Enabled = false; //нельзя убитьМОже
-                        if (game.IsMate(pos, previosFigure.Position)) 
-                        {
-                            MessageBox.Show(
-                            "Шах и мат, аметисты!",
-                            "Игра окончена",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information,
-                            MessageBoxDefaultButton.Button1,
-                            MessageBoxOptions.DefaultDesktopOnly);
-                        }
+                        MessageBox.Show(
+                        "Шах и мат!",
+                        "Игра окончена",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
                     }
                 }
                 SwapPlayers(); //Поменяли игроков местами

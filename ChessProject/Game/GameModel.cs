@@ -17,8 +17,6 @@ namespace ChessProject
         Player black = new Player(PlayerColor.Black);
         public List<Position> PosiblePositions;
         public Player CurrentPlayer { get; private set; }
-        public bool IsShah { get; private set; }
-
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
 
@@ -79,13 +77,33 @@ namespace ChessProject
             Map[newPos.X, newPos.Y] = figure;
             figure.Move(newPos);
         }
-
+        //Хранит позицию короля, которому сделали шах
+        public Position KingPositionAtStake { get;private set; }
+        //Есть ли шах
+        public bool IsShah(Position figurePosition) 
+        {
+            var figure = Map[figurePosition.X, figurePosition.Y];
+            var positions = figure.FindPosibleWays(Map);
+            foreach (var pos in positions)
+            {
+                if (Map[pos.X, pos.Y] is King && figure.Player != Map[pos.X, pos.Y].Player) //если  фигура чужой король
+                {
+                    KingPositionAtStake = pos;
+                    return true;
+                }
+            }
+            return false;
+        }
+        //Есть ли мат
         public bool IsMate(Position kingPosition, Position figurePosition)
         {
+            if (!IsShah(figurePosition))
+                return true;
             var posiblePositions = Map[kingPosition.X, kingPosition.Y].FindPosibleWays(Map);
             var player = Map[kingPosition.X, kingPosition.Y].Player;
             var listPositionsPlayer = new List<Position>();
             var path = GetPositionsThreateningTheKing(kingPosition, figurePosition);
+            
             if (posiblePositions.Count == 0)
             {
                 foreach (var cell in Map)
