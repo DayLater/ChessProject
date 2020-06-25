@@ -22,21 +22,21 @@ namespace ChessProject
 
         public List<Position> FindPosibleWays(IFigure[,] map)
         {
-            return FindPosibleWaysBySelector(map, figure => figure.Player != Player);
+            return FindPosibleWaysBySelector(map, (figure) => figure.Player != Player, figure => true);
         }
 
         public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
         {
-            return FindPosibleWaysBySelector(map, figure => true);
+            return FindPosibleWaysBySelector(map, x => true, figure => !(figure is King && figure.Player != Player));
         }
 
-        List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector)
+        List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector, Func<IFigure, bool> breakSelector)
         {
             var result = new List<Position>();
-            this.FindPosiblePositionsInDirection(result, 0, 1, map, selector);
-            this.FindPosiblePositionsInDirection(result, 0, -1, map, selector);
-            this.FindPosiblePositionsInDirection(result, 1, 0, map, selector);
-            this.FindPosiblePositionsInDirection(result, -1, 0, map, selector);
+            this.FindPosiblePositionsInDirection(result, 0, 1, map, selector, breakSelector);
+            this.FindPosiblePositionsInDirection(result, 0, -1, map, selector, breakSelector);
+            this.FindPosiblePositionsInDirection(result, 1, 0, map, selector, breakSelector);
+            this.FindPosiblePositionsInDirection(result, -1, 0, map, selector, breakSelector);
             return result;
         }
     }

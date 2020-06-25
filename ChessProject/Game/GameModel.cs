@@ -79,6 +79,7 @@ namespace ChessProject
         }
         //Хранит позицию короля, которому сделали шах
         public Position KingPositionAtStake { get;private set; }
+
         //Есть ли шах
         public bool IsShah(Position figurePosition) 
         {
@@ -94,11 +95,12 @@ namespace ChessProject
             }
             return false;
         }
+
         //Есть ли мат
         public bool IsMate(Position kingPosition, Position figurePosition)
         {
             if (!IsShah(figurePosition))
-                return true;
+                return false;
             var posiblePositions = Map[kingPosition.X, kingPosition.Y].FindPosibleWays(Map);
             var player = Map[kingPosition.X, kingPosition.Y].Player;
             var listPositionsPlayer = new List<Position>();
