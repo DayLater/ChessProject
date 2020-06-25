@@ -109,9 +109,7 @@ namespace ChessProject
                 foreach (var cell in Map)
                 {
                     if (cell != null && cell.Player.Equals(player))
-                    {
                         listPositionsPlayer.AddRange(cell.FindPosibleWays(Map));
-                    }
                 }
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
                 foreach (var p in listPositionsPlayer)
