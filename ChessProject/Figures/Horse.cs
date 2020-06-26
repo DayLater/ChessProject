@@ -37,7 +37,7 @@ namespace ChessProject
                 if (map[x, y] is null)
                     positions.Add(new Position(x, y));
                 else if (selector(map[x, y]))
-                        positions.Add(new Position(x, y));
+                    positions.Add(new Position(x, y));
             }
         }
 

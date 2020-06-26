@@ -17,6 +17,7 @@ namespace ChessProject
         public void ChildMate() //детский мат
         {
             GameModel game = new GameModel();
+            game.Start();
             game.MakeTurn(new Position(1, 5), game.Map[7, 3]);
             game.MakeTurn(new Position(4, 2), game.Map[7, 5]);
             Assert.AreEqual(true, game.IsMate(new Position(0, 4), new Position(1, 5)));
@@ -49,9 +50,6 @@ namespace ChessProject
             game.SwapPlayer();
             map[3, 3] = new King(new Position(3, 3), game.CurrentPlayer);
             Assert.AreEqual(true, game.IsMate(new Position(3, 3), new Position(6, 3)));
-            //Тест не проходит. Ошибку нашел. Король неправильно находит возможные ходы
-            //В этом тесте у него есть возможность идти наверх, по идее он так сделать не может. 
-            //Нужно будет переделать поиск пути короля
         }
 
         [Test]
@@ -82,8 +80,6 @@ namespace ChessProject
             game.SwapPlayer();
             map[2, 0] = new King(new Position(2, 0), game.CurrentPlayer);
             Assert.AreEqual(true, game.IsMate(new Position(2, 0), new Position(4, 0)));
-            //Та же ошибка, что в и зеркальном мате. Король может сделать шаг назад. Хотя по идее не должен. 
-            //Нужно будет переделать поиск пути короля
         }
 
         [Test]
@@ -172,13 +168,11 @@ namespace ChessProject
             for (int i = 5; i < 8; i++)
                 map[1, i] = new Pawn(new Position(1, i), game.CurrentPlayer);
             map[3, 3] = new Pawn(new Position(3, 3), game.CurrentPlayer);
-            map[3, 4] = new Rook(new Position(3, 4), game.CurrentPlayer);
+            map[4, 3] = new Rook(new Position(4, 3), game.CurrentPlayer);
             Assert.AreEqual(true, game.IsMate(new Position(0, 6), new Position(0, 0))); // не проходит
-            // Возникает та же самая ошибка, что и выше. Король может пойти в свободную клетку справа. (Хотя не должен)
 
             map[3, 3] = null; //убираем пешку, закрывающую башню 
             Assert.AreEqual(false, game.IsMate(new Position(0, 6), new Position(0, 0))); //Мата не должно быть  - тест проходит
-            //Так как башня может перекрыть путь вражеской короле
         }
 
         [Test]
@@ -193,7 +187,7 @@ namespace ChessProject
             game.SwapPlayer();
             map[0, 7] = new King(new Position(0, 7), game.CurrentPlayer);
             map[1, 7] = new Pawn(new Position(1, 7), game.CurrentPlayer);
-            map[3, 3] = new Pawn(new Position(3, 4), game.CurrentPlayer); //просто для заполнения
+            map[3, 4] = new Pawn(new Position(3, 4), game.CurrentPlayer); //просто для заполнения
             Assert.AreEqual(true, game.IsMate(new Position(0, 7), new Position(1, 6))); 
         }
 
@@ -216,11 +210,8 @@ namespace ChessProject
             //вторая вариация этого теста
             map[3, 3] = new Elephant(new Position(3, 3), game.CurrentPlayer);
             game.SwapPlayer();
-            map[3, 0] = new Rook(new Position(0, 3), game.CurrentPlayer);
-            //данный тест не проходит. Игра дает возможность убить коня, который далает шах. Однако, если коня убить, то 
-            //Король откроется для башни и снова будет шах. Поэтому такой ход невозможен. Требуется найти ошибку
+            map[3, 0] = new Rook(new Position(3, 0), game.CurrentPlayer);
             Assert.AreEqual(true, game.IsMate(new Position(3, 4), new Position(4, 2))); //второй вариант этого мата
-
 
             //убираем башню, из-за которой в прошлом ассерте был мат. Теперь убить коня можно => мата нет
             map[3, 0] = null;
@@ -249,14 +240,12 @@ namespace ChessProject
             GameModel game = new GameModel();
             var map = game.Map;
             game.Start();
-            map[7, 7] = null;
-            game.MakeTurn(new Position(1, 5), map[0, 6]);
+            game.MakeTurn(new Position(7, 5), map[7, 7]);
+            game.MakeTurn(new Position(1, 5), map[7, 6]);
             map[6, 6] = null;
             game.SwapPlayer();
             game.MakeTurn(new Position(5, 5), map[0, 1]);
             game.MakeTurn(new Position(4, 4), map[0, 3]);
-            //тест не проходит. Игра позволяет убить вражеского коня. Однако таким образом король откроется под шах 
-            // => должен быть мат. 
             Assert.AreEqual(true, game.IsMate(new Position(7, 4), new Position(5, 5)));
         }
 
@@ -273,8 +262,6 @@ namespace ChessProject
             game.MakeTurn(new Position(1, 3), map[0, 1]);
             game.MakeTurn(new Position(2, 5), map[0, 6]);
             game.MakeTurn(new Position(2, 2), map[1, 2]);
-            //тест не проходит. Игра позволяет убить вражеского коня. Однако таким образом король откроется под шах от ферзя
-            // => должен быть мат. 
             Assert.AreEqual(true, game.IsMate(new Position(0, 4), new Position(2, 3)));
         }
 
