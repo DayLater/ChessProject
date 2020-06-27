@@ -149,6 +149,21 @@ namespace ChessProject
             return king;
         }
 
+        public bool IsStalemate() 
+        {
+            var king = FindCurrentKing();
+            if (IsShah(Map, king, out IFigure shahFigure))
+                return false;
+            var listPositionsPlayer = new List<Position>();
+            foreach (var figure in Map)
+            {
+                if (figure != null && figure.Player.Equals(king.Player))
+                    AddCorrectMoves(figure, king.Position, listPositionsPlayer);
+                if (listPositionsPlayer.Count > 0)
+                    return false;
+            }
+            return true;
+        }
         //Есть ли мат
         public bool IsMate()
         {
