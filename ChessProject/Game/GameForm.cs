@@ -7,11 +7,12 @@ namespace ChessProject
 {
     class GameForm : Form
     {
-        private readonly GameModel game = new GameModel();
+        GameModel game = new GameModel();
         readonly CellButton[,] buttons = new CellButton[8, 8];
         Label currentPositionLabel;
         Label currentPlayerLabel;
         IFigure prevFigure;
+        Button restart; 
 
         public GameForm()
         {
@@ -20,6 +21,7 @@ namespace ChessProject
             CreateLabels(new string[] { "8","7", "6", "5", "4", "3", "2",  "1" }, false);
             CreateLabelCurrentPosition();
             CreateCurrentPlayerLabel();
+            CreateRestart();
             game.Start();
             game.SwapPlayer();
             SwapPlayers();
@@ -71,13 +73,33 @@ namespace ChessProject
         }
 
         #region Создание кнопок, label-текста и прочее, не влияющее на игру
+        void CreateRestart()
+        {
+            restart = new Button()
+            {
+                Location = new Point(680, 0),
+                Text = "Начать заново",
+                Size = new Size(120, 50)
+            };
+            restart.Click += Restart;
+            Controls.Add(restart);
+        }        
+        void Restart(object sender, EventArgs e)
+        {
+            game = new GameModel();
+            game.Start();
+            game.SwapPlayer();
+            UpdateMap();
+            SwapPlayers();
+        }
+
         /// <summary>
         /// Метод создания Label для выведения информации о текущей позиции мыши
         /// </summary>
         void CreateLabelCurrentPosition()
         {
             currentPositionLabel = new Label();
-            currentPositionLabel.Location = new Point(680, 0);
+            currentPositionLabel.Location = new Point(680, 600);
             currentPositionLabel.Size = new Size(150, 50);
             currentPositionLabel.Text = "Позиция: "; 
             currentPositionLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
@@ -155,7 +177,7 @@ namespace ChessProject
             currentPlayerLabel = new Label();
             currentPlayerLabel.Location = new Point(680, 50);
             currentPlayerLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            currentPlayerLabel.Size = new Size(150, 50);
+            currentPlayerLabel.Size = new Size(160, 50);
             Controls.Add(currentPlayerLabel);
         }
 
@@ -201,8 +223,8 @@ namespace ChessProject
         {
             game.SwapPlayer(); //поменяли игроков местами
             if (game.CurrentPlayer.Color == PlayerColor.White)
-                currentPlayerLabel.Text = "Ход белого игрока";
-            else currentPlayerLabel.Text = "Ход черного игрока";
+                currentPlayerLabel.Text = "Ходят белые";
+            else currentPlayerLabel.Text = "Ходят черные";
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                 {
