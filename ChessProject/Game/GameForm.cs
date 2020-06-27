@@ -224,6 +224,17 @@ namespace ChessProject
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
             }
+            if (prevFigure != null && game.IsStalemate())
+            {
+                MessageBox.Show(
+                "Ничья, пат!",
+                "Игра окончена",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly);
+            }
+
             prevFigure = null; //очистили прошую фигуру
         }
 
