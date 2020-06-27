@@ -9,7 +9,7 @@ namespace ChessProject
 {
     public interface IFigure
     {
-        Position Position { get; }
+        Position Position { get; set; }
         Player Player { get;}
         string Picture { get; }
 

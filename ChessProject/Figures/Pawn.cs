@@ -9,7 +9,7 @@ namespace ChessProject
 {
     public class Pawn : IFigure
     {
-        public Position Position { get; private set; }
+        public Position Position { get;  set; }
         public Player Player { get; }
         public string Picture => Player.Color == PlayerColor.Black ? "♟" : "♙";
         public bool IsFirstStep { get; set; } = true;
@@ -47,7 +47,7 @@ namespace ChessProject
                         positions.Add(new Position(x, y));
                     else if (i == 0 && map[x, y] is null)
                     {
-                        if (map[x + dx, y] is null && IsFirstStep)
+                        if (IsFirstStep && map[x + dx, y] is null)
                             positions.Add(new Position(x + dx, y));
                         positions.Add(new Position(x , y));
                     }
