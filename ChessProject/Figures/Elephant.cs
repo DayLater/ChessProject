@@ -9,7 +9,7 @@ namespace ChessProject
 {
     public class Elephant : IFigure
     {
-        public Position Position { get; private set; }
+        public Position Position { get;  set; }
         public Player Player { get; }
         public string Picture => Player.Color == PlayerColor.Black? "♝" : "♗";
 

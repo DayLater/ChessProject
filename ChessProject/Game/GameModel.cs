@@ -71,22 +71,22 @@ namespace ChessProject
         {
             PosiblePositions = new List<Position>();
             var king = FindCurrentKing();
-            AddCorrectMoves(figure, king.Position);
+            AddCorrectMoves(figure, king.Position, PosiblePositions);
         }
 
-        void AddCorrectMoves(IFigure figure, Position kingPosition)
+        void AddCorrectMoves(IFigure figure, Position kingPosition, List<Position> positions)
         {
             var figurePosiblePositions = figure.FindPosibleWays(Map);
             var figurePos = new Position(figure.Position.X, figure.Position.Y);
             foreach (var pos in figurePosiblePositions)
             {
                 var tempMap = (IFigure[,])Map.Clone();
-                tempMap[figurePos.X, figurePos.Y].Move(new Position(pos.X, pos.Y));
+                tempMap[figurePos.X, figurePos.Y].Position = new Position(pos.X, pos.Y);
                 tempMap[pos.X, pos.Y] = tempMap[figurePos.X, figurePos.Y];
                 tempMap[figurePos.X, figurePos.Y] = null;
                 if (!IsShah(tempMap, (King)Map[kingPosition.X, kingPosition.Y]))
-                    PosiblePositions.Add(pos);
-                figure.Move(figurePos);
+                    positions.Add(pos);
+                figure.Position = figurePos;
             }
         }
         
@@ -159,23 +159,8 @@ namespace ChessProject
             if (posiblePositions.Count == 0)
             {
                 foreach (var figure in Map)
-                {
                     if (figure != null && figure.Player.Equals(player))
-                    {
-                        var figurePosiblePositions = figure.FindPosibleWays(Map);
-                        var figurePos = new Position(figure.Position.X, figure.Position.Y);
-                        foreach (var pos in figurePosiblePositions)
-                        {
-                            var tempMap = (IFigure[,])Map.Clone();
-                            tempMap[figurePos.X, figurePos.Y].Move(new Position(pos.X, pos.Y));
-                            tempMap[pos.X, pos.Y] = tempMap[figurePos.X, figurePos.Y];
-                            tempMap[figurePos.X, figurePos.Y] = null;
-                            if (!IsShah(tempMap, (King)Map[kingPosition.X, kingPosition.Y]))
-                                listPositionsPlayer.Add(pos);
-                            figure.Move(figurePos);
-                        }
-                    }
-                }
+                        AddCorrectMoves(figure, kingPosition, listPositionsPlayer);
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
                 foreach (var p in listPositionsPlayer)
                     if (path.Contains(p)) return false;
