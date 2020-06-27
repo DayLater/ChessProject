@@ -84,7 +84,7 @@ namespace ChessProject
                 tempMap[figurePos.X, figurePos.Y].Position = new Position(pos.X, pos.Y);
                 tempMap[pos.X, pos.Y] = tempMap[figurePos.X, figurePos.Y];
                 tempMap[figurePos.X, figurePos.Y] = null;
-                if (!IsShah(tempMap, (King)Map[kingPosition.X, kingPosition.Y]))
+                if (!IsShah(tempMap, (King)Map[kingPosition.X, kingPosition.Y], out IFigure shahFigure))
                     positions.Add(pos);
                 figure.Position = figurePos;
             }
@@ -116,7 +116,7 @@ namespace ChessProject
             return false;
         }
 
-        bool IsShah(IFigure[,] map, King shahKing)
+        bool IsShah(IFigure[,] map, King shahKing, out IFigure shahFigure)
         {
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
@@ -126,9 +126,13 @@ namespace ChessProject
                     {
                         var figuresPositions = figure.FindPosibleWays(map);
                         if (figuresPositions.Contains(shahKing.Position))
+                        {
+                            shahFigure = figure;
                             return true;
+                        }
                     }
                 }
+            shahFigure = null;
             return false;
         }
 
@@ -146,20 +150,18 @@ namespace ChessProject
         }
 
         //Есть ли мат
-        public bool IsMate(Position kingPosition, Position figurePosition)
+        public bool IsMate()
         {
-            if (!IsShah(figurePosition))
+            var king = FindCurrentKing(); 
+            if (!IsShah(Map, king, out IFigure shahFigure)) 
                 return false;
-            var posiblePositions = Map[kingPosition.X, kingPosition.Y].FindPosibleWays(Map);
-            var player = Map[kingPosition.X, kingPosition.Y].Player;
             var listPositionsPlayer = new List<Position>();
-            var path = GetPositionsThreateningTheKing(kingPosition, figurePosition);
-            
-            if (posiblePositions.Count == 0)
+            var path = GetPositionsThreateningTheKing(king.Position, shahFigure.Position);
+            if (king.FindPosibleWays(Map).Count == 0)
             {
                 foreach (var figure in Map)
-                    if (figure != null && figure.Player.Equals(player))
-                        AddCorrectMoves(figure, kingPosition, listPositionsPlayer);
+                    if (figure != null && figure.Player.Equals(king.Player))
+                        AddCorrectMoves(figure, king.Position, listPositionsPlayer);
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
                 foreach (var p in listPositionsPlayer)
                     if (path.Contains(p)) return false;

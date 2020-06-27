@@ -60,21 +60,10 @@ namespace ChessProject
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
-                var previosFigure = prevFigure;
                 if (game.IsShah(prevFigure.Position)) 
                 {
                     buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].BackColor = Color.Red; //помечаем красным
                     buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].Enabled = false; //нельзя убитьМОже
-                    if (game.IsMate(game.KingPositionAtStake, previosFigure.Position))
-                    {
-                        MessageBox.Show(
-                        "Шах и мат!",
-                        "Игра окончена",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information,
-                        MessageBoxDefaultButton.Button1,
-                        MessageBoxOptions.DefaultDesktopOnly);
-                    }
                 }
                 SwapPlayers(); //Поменяли игроков местами
             }
@@ -209,7 +198,6 @@ namespace ChessProject
         /// </summary>
         void SwapPlayers()
         {
-            prevFigure = null; //очистили прошую фигуру
             game.SwapPlayer(); //поменяли игроков местами
             if (game.CurrentPlayer.Color == PlayerColor.White)
                 currentPlayerLabel.Text = "Ход белого игрока";
@@ -224,7 +212,19 @@ namespace ChessProject
                             buttons[i, j].Enabled = true;
                         else buttons[i, j].Enabled = false;
                     }
-                }
+                }     
+
+            if (prevFigure != null && game.IsMate())
+            {
+                MessageBox.Show(
+                "Шах и мат!",
+                "Игра окончена",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly);
+            }
+            prevFigure = null; //очистили прошую фигуру
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace ChessProject
             {
                 if ((cell.X + cell.Y) % 2 == 1) buttons[cell.X, cell.Y].BackColor = Color.Brown;
                 else buttons[cell.X, cell.Y].BackColor = Color.OldLace;
-                if (buttons[cell.X, cell.Y].Text == "") buttons[cell.X, cell.Y].Enabled = false;
+                if (cell != p) buttons[cell.X, cell.Y].Enabled = false;
             }
         }
 
