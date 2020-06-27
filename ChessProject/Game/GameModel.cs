@@ -19,10 +19,7 @@ namespace ChessProject
         public Player CurrentPlayer { get; private set; }
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
-        Stack<IFigure[,]> stackOfMaps = new Stack<IFigure[,]>();
 
-        readonly King blackKing;
-        readonly King whiteKing;
 
         public void Start()
         {
@@ -38,9 +35,6 @@ namespace ChessProject
         public GameModel()
         {
             CreateMap();
-            blackKing = (King)Map[0, 4];
-            whiteKing = (King)Map[7, 4];
-            stackOfMaps.Push((IFigure[,])Map.Clone());
         }
 
         //Метод для заполнения карты фигурами
@@ -84,7 +78,6 @@ namespace ChessProject
             Map[figure.Position.X, figure.Position.Y] = null;
             Map[newPos.X, newPos.Y] = figure;
             figure.Move(newPos);
-            stackOfMaps.Push((IFigure[,])Map.Clone());
         }
 
         //Хранит позицию короля, которому сделали шах
