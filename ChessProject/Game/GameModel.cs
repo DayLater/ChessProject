@@ -81,12 +81,15 @@ namespace ChessProject
             foreach (var pos in figurePosiblePositions)
             {
                 var tempMap = (IFigure[,])Map.Clone();
+                
                 tempMap[figurePos.X, figurePos.Y].Move(new Position(pos.X, pos.Y));
                 tempMap[pos.X, pos.Y] = tempMap[figurePos.X, figurePos.Y];
                 tempMap[figurePos.X, figurePos.Y] = null;
                 if (!IsShah(tempMap, (King)Map[kingPosition.X, kingPosition.Y]))
                     PosiblePositions.Add(pos);
                 figure.Move(figurePos);
+                if (figure is Pawn)
+                    ((Pawn)figure).IsFirstStep = true;
             }
         }
         
