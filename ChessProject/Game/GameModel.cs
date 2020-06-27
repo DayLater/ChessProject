@@ -15,7 +15,7 @@ namespace ChessProject
         //Игроки
         Player white = new Player(PlayerColor.White);
         Player black = new Player(PlayerColor.Black);
-        public List<Position> PosiblePositions;
+        public List<Position> PosiblePositions { get; set; }
         public Player CurrentPlayer { get; private set; }
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
@@ -69,12 +69,29 @@ namespace ChessProject
         //Метод для поиска пути конкретной фигуры
         public void FindPosibleWays(IFigure figure)
         {
-            PosiblePositions = figure.FindPosibleWays(Map);
+            PosiblePositions = new List<Position>();
+            var king = FindCurrentKing();
+            AddCorrectMoves(figure, king.Position);
         }
 
+        void AddCorrectMoves(IFigure figure, Position kingPosition)
+        {
+            var figurePosiblePositions = figure.FindPosibleWays(Map);
+            var figurePos = new Position(figure.Position.X, figure.Position.Y);
+            foreach (var pos in figurePosiblePositions)
+            {
+                var tempMap = (IFigure[,])Map.Clone();
+                tempMap[figurePos.X, figurePos.Y].Move(new Position(pos.X, pos.Y));
+                tempMap[pos.X, pos.Y] = tempMap[figurePos.X, figurePos.Y];
+                tempMap[figurePos.X, figurePos.Y] = null;
+                if (!IsShah(tempMap, (King)Map[kingPosition.X, kingPosition.Y]))
+                    PosiblePositions.Add(pos);
+                figure.Move(figurePos);
+            }
+        }
+        
         public void MakeTurn(Position newPos, IFigure figure)
         {
-            
             Map[figure.Position.X, figure.Position.Y] = null;
             Map[newPos.X, newPos.Y] = figure;
             figure.Move(newPos);
@@ -113,6 +130,20 @@ namespace ChessProject
                     }
                 }
             return false;
+        }
+
+
+        King FindCurrentKing()
+        {
+            King king = null;
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    IFigure figure = Map[i, j];
+                    if (figure != null && figure is King && figure.Player == CurrentPlayer)
+                        king = (King)figure;
+                }
+            return king;
         }
 
         //Есть ли мат
