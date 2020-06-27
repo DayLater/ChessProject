@@ -132,7 +132,6 @@ namespace ChessProject
             return false;
         }
 
-
         King FindCurrentKing()
         {
             King king = null;
