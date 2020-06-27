@@ -62,8 +62,9 @@ namespace ChessProject
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
                 if (game.IsShah(prevFigure.Position)) 
                 {
+                    buttons[prevFigure.Position.X, prevFigure.Position.Y].BackColor = Color.DeepSkyBlue; //помечаем фигуру, сделавшую шах
                     buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].BackColor = Color.Red; //помечаем красным
-                    buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].Enabled = false; //нельзя убитьМОже
+                    buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].Enabled = false; //нельзя убить
                 }
                 SwapPlayers(); //Поменяли игроков местами
             }
@@ -262,7 +263,6 @@ namespace ChessProject
                 if (cell != p) buttons[cell.X, cell.Y].Enabled = false;
             }
         }
-
     }
 }
 
