@@ -12,7 +12,7 @@ namespace ChessProject
         public Position Position { get;  set; }
         public Player Player { get; }
         public string Picture => Player.Color == PlayerColor.Black ? "♟" : "♙";
-        private bool IsFirstStep { get; set; } = true;
+        public bool IsFirstStep { get; set; } = true;
 
         public Pawn(Position position, Player player)
         {
