@@ -19,8 +19,17 @@ namespace ChessProject
         public Player CurrentPlayer { get; private set; }
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
+
         public IFigure PreviousFigure { get; set; }
         public IFigure CurrentFigure { get; set; }
+
+        public bool IsSamePlayer { get { return PreviousFigure.Player == CurrentFigure.Player; } }
+
+        public void GetCurrentFigure(Position figurePosition)
+        {
+            PreviousFigure = CurrentFigure;
+            CurrentFigure = Map[figurePosition.X, figurePosition.Y];
+        }
 
         public void Start()
         {
@@ -31,6 +40,7 @@ namespace ChessProject
         {
             if (CurrentPlayer == white) CurrentPlayer = black;
             else CurrentPlayer = white;
+            PreviousFigure = null;
         }
 
         public GameModel()
@@ -68,11 +78,11 @@ namespace ChessProject
         }
 
         //Метод для поиска пути конкретной фигуры
-        public void FindPosibleWays(IFigure figure)
+        public void FindPosibleWays()
         {
             PosiblePositions = new List<Position>();
             var king = FindCurrentKing();
-            AddCorrectMoves(figure, king.Position, PosiblePositions);
+            AddCorrectMoves(CurrentFigure, king.Position, PosiblePositions);
         }
 
         void AddCorrectMoves(IFigure figure, Position kingPosition, List<Position> positions)
@@ -102,9 +112,9 @@ namespace ChessProject
         public Position KingPositionAtStake { get; private set; }
 
         //Есть ли шах
-        public bool IsShah(Position figurePosition)
+        public bool IsShah()
         {
-            var figure = Map[figurePosition.X, figurePosition.Y];
+            var figure = Map[PreviousFigure.Position.X, PreviousFigure.Position.Y];
             var positions = figure.FindPosibleWays(Map);
             if (figure is Pawn)
                 positions = positions.Where(p => p.Y != figure.Position.Y).ToList();
@@ -224,23 +234,16 @@ namespace ChessProject
                     result.Add(p);
         }
 
-        public bool IsPawnTransformation(Position figurePosition)
+        public bool IsPawnTransformation()
         {
-            var figure = Map[figurePosition.X, figurePosition.Y];
-
-            if (figure != null && figure is Pawn)
-            {
-                    if (figure.Player.Equals(white) && figurePosition.X == 0)
-                        return true;
-                    if (figure.Player.Equals(black) && figurePosition.X == 7)
-                        return true;
-            }
+            if (PreviousFigure != null && PreviousFigure is Pawn && (PreviousFigure.Position.X == 0 || PreviousFigure.Position.X == 7))
+                return true;
             return false;
         }
 
-        public void PawnTransformation(Position figurePosition, IFigure figure)
+        public void PawnTransformation(IFigure figure)
         {
-            Map[figurePosition.X, figurePosition.Y] = figure;
+            Map[PreviousFigure.Position.X, PreviousFigure.Position.Y] = figure;
         }
     }
 }
