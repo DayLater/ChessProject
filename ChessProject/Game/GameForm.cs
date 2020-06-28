@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessProject.Game;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -12,13 +13,13 @@ namespace ChessProject
         Label currentPositionLabel;
         Label currentPlayerLabel;
         IFigure prevFigure;
-        Button restart; 
+        Button restart;
 
         public GameForm()
         {
             CreateFormAndButtons();
             CreateLabels(new string[] { "A", "B", "C", "D", "E", "F", "G", "H" }, true);
-            CreateLabels(new string[] { "8","7", "6", "5", "4", "3", "2",  "1" }, false);
+            CreateLabels(new string[] { "8", "7", "6", "5", "4", "3", "2", "1" }, false);
             CreateLabelCurrentPosition();
             CreateCurrentPlayerLabel();
             CreateRestart();
@@ -62,7 +63,7 @@ namespace ChessProject
                 game.MakeTurn(newPos, prevFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
                 game.FindPosibleWays(prevFigure); //ищем возможные ходы
-                if (game.IsShah(prevFigure.Position)) 
+                if (game.IsShah(prevFigure.Position))
                 {
                     buttons[prevFigure.Position.X, prevFigure.Position.Y].BackColor = Color.DeepSkyBlue; //помечаем фигуру, сделавшую шах
                     buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].BackColor = Color.Red; //помечаем красным
@@ -83,7 +84,7 @@ namespace ChessProject
             };
             restart.Click += Restart;
             Controls.Add(restart);
-        }        
+        }
         void Restart(object sender, EventArgs e)
         {
             game = new GameModel();
@@ -101,7 +102,7 @@ namespace ChessProject
             currentPositionLabel = new Label();
             currentPositionLabel.Location = new Point(680, 600);
             currentPositionLabel.Size = new Size(150, 50);
-            currentPositionLabel.Text = "Позиция: "; 
+            currentPositionLabel.Text = "Позиция: ";
             currentPositionLabel.Font = new Font("Times New Roman", 14F, FontStyle.Regular, GraphicsUnit.Point, 204);
             Controls.Add(currentPositionLabel);
         }
@@ -235,28 +236,41 @@ namespace ChessProject
                             buttons[i, j].Enabled = true;
                         else buttons[i, j].Enabled = false;
                     }
-                }     
+                }
+            
+            if (prevFigure != null)
+            {
+                if (game.IsPawnTransformation(prevFigure.Position))
+                {
+                    var form = new PawnTransformationForm(prevFigure.Position, prevFigure.Player);
+                    form.ShowDialog();
+                    game.PawnTransformation(prevFigure.Position, form.Figure);
+                    form.FormClosed += (s, a) => UpdateMap(); // эта херня не работает
+                }
 
-            if (prevFigure != null && game.IsMate())
-            {
-                MessageBox.Show(
-                "Шах и мат!",
-                "Игра окончена",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.DefaultDesktopOnly);
+                if (game.IsMate())
+                {
+                    MessageBox.Show(
+                      "Шах и мат!",
+                      "Игра окончена",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Information,
+                      MessageBoxDefaultButton.Button1,
+                      MessageBoxOptions.DefaultDesktopOnly);
+                }
+
+                if (game.IsStalemate())
+                {
+                    MessageBox.Show(
+                    "Ничья, пат!",
+                    "Игра окончена",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+                }
             }
-            if (prevFigure != null && game.IsStalemate())
-            {
-                MessageBox.Show(
-                "Ничья, пат!",
-                "Игра окончена",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.DefaultDesktopOnly);
-            }
+
 
             prevFigure = null; //очистили прошую фигуру
         }
@@ -285,7 +299,7 @@ namespace ChessProject
         /// Метод для возврата цвета клеток к нормальному от зеленого
         /// </summary>
         /// <param name="p"></param>
-        void UpdateColorPosition(Position p) 
+        void UpdateColorPosition(Position p)
         {
             var list = game.PosiblePositions;
             list.Add(p);

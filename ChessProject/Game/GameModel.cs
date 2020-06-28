@@ -88,7 +88,7 @@ namespace ChessProject
                 figure.Position = figurePos;
             }
         }
-        
+
         public void MakeTurn(Position newPos, IFigure figure)
         {
             Map[figure.Position.X, figure.Position.Y] = null;
@@ -97,10 +97,10 @@ namespace ChessProject
         }
 
         //Хранит позицию короля, которому сделали шах
-        public Position KingPositionAtStake { get;private set; }
+        public Position KingPositionAtStake { get; private set; }
 
         //Есть ли шах
-        public bool IsShah(Position figurePosition) 
+        public bool IsShah(Position figurePosition)
         {
             var figure = Map[figurePosition.X, figurePosition.Y];
             var positions = figure.FindPosibleWays(Map);
@@ -148,7 +148,7 @@ namespace ChessProject
             return king;
         }
 
-        public bool IsStalemate() 
+        public bool IsStalemate()
         {
             var king = FindCurrentKing();
             if (IsShah(Map, king, out IFigure shahFigure))
@@ -167,8 +167,8 @@ namespace ChessProject
         //Есть ли мат
         public bool IsMate()
         {
-            var king = FindCurrentKing(); 
-            if (!IsShah(Map, king, out IFigure shahFigure)) 
+            var king = FindCurrentKing();
+            if (!IsShah(Map, king, out IFigure shahFigure))
                 return false;
             var listPositionsPlayer = new List<Position>();
             var path = GetPositionsThreateningTheKing(king.Position, shahFigure.Position);
@@ -220,6 +220,25 @@ namespace ChessProject
             if (predicate(kingPosition, figurePosition))
                 foreach (var p in path.Where(p => predicate(p, figurePosition)))
                     result.Add(p);
+        }
+
+        public bool IsPawnTransformation(Position figurePosition)
+        {
+            var figure = Map[figurePosition.X, figurePosition.Y];
+
+            if (figure != null && figure is Pawn)
+            {
+                    if (figure.Player.Equals(white) && figurePosition.X == 0)
+                        return true;
+                    if (figure.Player.Equals(black) && figurePosition.X == 7)
+                        return true;
+            }
+            return false;
+        }
+
+        public void PawnTransformation(Position figurePosition, IFigure figure)
+        {
+            Map[figurePosition.X, figurePosition.Y] = figure;
         }
     }
 }
