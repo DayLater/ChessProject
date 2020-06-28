@@ -19,6 +19,8 @@ namespace ChessProject
         public Player CurrentPlayer { get; private set; }
         //Карта
         public readonly IFigure[,] Map = new IFigure[8, 8];
+        public IFigure PreviousFigure { get; set; }
+        public IFigure CurrentFigure { get; set; }
 
         public void Start()
         {

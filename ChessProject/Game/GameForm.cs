@@ -242,10 +242,10 @@ namespace ChessProject
             {
                 if (game.IsPawnTransformation(prevFigure.Position))
                 {
-                    var form = new PawnTransformationForm(prevFigure.Position, prevFigure.Player);
+                    var form = new PawnTransformationForm(prevFigure.Position, prevFigure.Player);                    
                     form.ShowDialog();
                     game.PawnTransformation(prevFigure.Position, form.Figure);
-                    form.FormClosed += (s, a) => UpdateMap(); // эта херня не работает
+                    UpdateMap();
                 }
 
                 if (game.IsMate())
@@ -270,8 +270,6 @@ namespace ChessProject
                     MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
-
-
             prevFigure = null; //очистили прошую фигуру
         }
 
