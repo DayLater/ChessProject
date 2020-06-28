@@ -12,7 +12,6 @@ namespace ChessProject
         readonly CellButton[,] buttons = new CellButton[8, 8];
         Label currentPositionLabel;
         Label currentPlayerLabel;
-        IFigure prevFigure;
         Button restart;
 
         public GameForm()
@@ -36,36 +35,34 @@ namespace ChessProject
         void SwapBlocks(object sender, EventArgs e)
         {
             var pressedCell = sender as CellButton; //получили кпопку
-            IFigure currentFigure = game.Map[pressedCell.Position.X, pressedCell.Position.Y]; //получили фигуру
+            game.GetCurrentFigure(pressedCell.Position); //получили фигуру
             //если фигура не пустая и при этом прошлой фигуры нет или прошлая фигура того же игрока, то
-            if (currentFigure != null && (prevFigure == null || prevFigure.Player == currentFigure.Player))
+            if (game.CurrentFigure != null && (game.PreviousFigure == null || game.IsSamePlayer))
             {
                 //если прошлая фигура все же есть и она того же игрока. При этом game.PosiblePositions не пуст
-                if (prevFigure != null && prevFigure.Player == currentFigure.Player && game.PosiblePositions != null)
-                    UpdateColorPosition(prevFigure.Position);
+                if (game.PreviousFigure != null && game.IsSamePlayer && game.PosiblePositions != null)
+                    UpdateColorPosition();
                 //если это первое нажатие на фигуру или выбрали фигуру того же игрока
-                if (prevFigure == null || prevFigure.Player == currentFigure.Player)
+                if (game.PreviousFigure == null || game.IsSamePlayer)
                 {
-                    game.FindPosibleWays(currentFigure); //ищем возможные ходы
+                    game.FindPosibleWays(); //ищем возможные ходы
                     foreach (var pos in game.PosiblePositions)
                     {
                         buttons[pos.X, pos.Y].BackColor = Color.Green; //помечаем их зеленым
                         buttons[pos.X, pos.Y].Enabled = true; //даем возмонжость нажать на эти клетки
                     }
-                    prevFigure = currentFigure; //запомнили фигуру
                     pressedCell.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
                 }
             }
             // Если нажали на пустую клетку или на фигуру противника 
-            else if (currentFigure == null || currentFigure.Player != prevFigure.Player)
+            else if (game.CurrentFigure == null || !game.IsSamePlayer)
             {
                 var newPos = new Position(pressedCell.Position.X, pressedCell.Position.Y);//нашли новоую позицию
-                game.MakeTurn(newPos, prevFigure); //сделали туда ход
+                game.MakeTurn(newPos, game.PreviousFigure); //сделали туда ход
                 UpdateMap(); //обновили карту 
-                game.FindPosibleWays(prevFigure); //ищем возможные ходы
-                if (game.IsShah(prevFigure.Position))
+                if (game.IsShah())
                 {
-                    buttons[prevFigure.Position.X, prevFigure.Position.Y].BackColor = Color.DeepSkyBlue; //помечаем фигуру, сделавшую шах
+                    buttons[game.PreviousFigure.Position.X, game.PreviousFigure.Position.Y].BackColor = Color.DeepSkyBlue; //помечаем фигуру, сделавшую шах
                     buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].BackColor = Color.Red; //помечаем красным
                     buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].Enabled = false; //нельзя убить
                 }
@@ -237,40 +234,33 @@ namespace ChessProject
                         else buttons[i, j].Enabled = false;
                     }
                 }
-            
-            if (prevFigure != null)
+            if (game.IsPawnTransformation())
             {
-                if (game.IsPawnTransformation(prevFigure.Position))
-                {
-                    var form = new PawnTransformationForm(prevFigure.Position, prevFigure.Player);                    
-                    form.ShowDialog();
-                    game.PawnTransformation(prevFigure.Position, form.Figure);
-                    UpdateMap();
-                }
-
-                if (game.IsMate())
-                {
-                    MessageBox.Show(
-                      "Шах и мат!",
-                      "Игра окончена",
-                      MessageBoxButtons.OK,
-                      MessageBoxIcon.Information,
-                      MessageBoxDefaultButton.Button1,
-                      MessageBoxOptions.DefaultDesktopOnly);
-                }
-
-                if (game.IsStalemate())
-                {
-                    MessageBox.Show(
-                    "Ничья, пат!",
-                    "Игра окончена",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1,
-                    MessageBoxOptions.DefaultDesktopOnly);
-                }
+                var form = new PawnTransformationForm(game.PreviousFigure);
+                form.ShowDialog();
+                game.PawnTransformation(form.Figure);
+                UpdateMap();
             }
-            prevFigure = null; //очистили прошую фигуру
+            if (game.IsMate())
+            {
+                MessageBox.Show(
+                  "Шах и мат!",
+                  "Игра окончена",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Information,
+                  MessageBoxDefaultButton.Button1,
+                  MessageBoxOptions.DefaultDesktopOnly);
+            }
+            else if (game.IsStalemate())
+            {
+                MessageBox.Show(
+                "Ничья, пат!",
+                "Игра окончена",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly);
+            }
         }
 
         /// <summary>
@@ -296,16 +286,15 @@ namespace ChessProject
         /// <summary>
         /// Метод для возврата цвета клеток к нормальному от зеленого
         /// </summary>
-        /// <param name="p"></param>
-        void UpdateColorPosition(Position p)
+        void UpdateColorPosition()
         {
             var list = game.PosiblePositions;
-            list.Add(p);
+            list.Add(game.PreviousFigure.Position);
             foreach (var cell in list)
             {
                 if ((cell.X + cell.Y) % 2 == 1) buttons[cell.X, cell.Y].BackColor = Color.Brown;
                 else buttons[cell.X, cell.Y].BackColor = Color.OldLace;
-                if (cell != p) buttons[cell.X, cell.Y].Enabled = false;
+                if (cell != game.PreviousFigure.Position) buttons[cell.X, cell.Y].Enabled = false;
             }
         }
     }

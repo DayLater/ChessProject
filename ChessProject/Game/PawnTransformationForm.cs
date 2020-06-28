@@ -13,14 +13,15 @@ namespace ChessProject.Game
     public partial class PawnTransformationForm : Form
     {
         public IFigure Figure { get; private set; }
-        public PawnTransformationForm(Position position, Player player)
+
+        public PawnTransformationForm(IFigure figure)
         {
             InitializeComponent();
-            Figure = new Queen(position, player);
-            queenButton.Click += (s, a) => { this.Close(); };
-            horseButton.Click += (s, a) => { Figure = new Horse(position, player); this.Close(); };
-            rookButton.Click += (s, a) => { Figure = new Rook(position, player); this.Close(); };
-            elephantButton.Click += (s, a) => { Figure = new Elephant(position, player); this.Close(); };
+            Figure = new Queen(figure.Position, figure.Player);
+            queenButton.Click += (s, a) => { Close(); };
+            horseButton.Click += (s, a) => { Figure = new Horse(figure.Position, figure.Player); Close(); };
+            rookButton.Click += (s, a) => { Figure = new Rook(figure.Position, figure.Player); Close(); };
+            elephantButton.Click += (s, a) => { Figure = new Elephant(figure.Position, figure.Player); Close(); };
         }
 
         private void InitializeComponent()
