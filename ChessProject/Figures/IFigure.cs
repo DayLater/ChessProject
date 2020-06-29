@@ -11,7 +11,7 @@ namespace ChessProject
     {
         Position Position { get; set; }
         Player Player { get;}
-        string Picture { get; }
+        Image Picture { get; }
 
         /// <summary>
         /// Метод для передвижения фигуры на новую позицию

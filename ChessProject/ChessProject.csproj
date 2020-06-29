@@ -111,7 +111,45 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Images\Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ElephantB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ElephantW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\HorseB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\HorseW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\KingB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\KingW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PawnB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PawnW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\QueenB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\QueenW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\RookB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\RookW.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 
 namespace ChessProject
 {
@@ -10,7 +8,7 @@ namespace ChessProject
     {
         public Position Position { get;  set; }
         public Player Player { get;  }
-        public string Picture => Player.Color == PlayerColor.Black ? "♛" : "♕";
+        public Image Picture => Player.Color == PlayerColor.Black ? Properties.Resources.QueenB : Properties.Resources.QueenW;
         public void Move(Position newPosition)
         {
             Position = new Position(newPosition.X, newPosition.Y);

@@ -11,7 +11,7 @@ namespace ChessProject
     {
         public Position Position { get;  set; }
         public Player Player { get; }
-        public string Picture => Player.Color == PlayerColor.Black? "♝" : "♗";
+        public Image Picture => Player.Color == PlayerColor.Black? Properties.Resources.ElephantB : Properties.Resources.ElephantW;
         public void Move(Position newPosition)
         {
             Position = new Position(newPosition.X, newPosition.Y);
