@@ -20,7 +20,6 @@ namespace ChessProject
         //Карта
         public readonly Map Map = new Map();
 
-        public King CurrentKing { get { return FindCurrentKing(); } }
         public IFigure PreviousFigure { get; set; }
         public IFigure CurrentFigure { get; set; }
 
@@ -108,7 +107,6 @@ namespace ChessProject
             Map[newPos.X, newPos.Y] = figure;
             figure.Move(newPos);
         }
-
 
         public void MakeTurn(Position newPos)
         {
