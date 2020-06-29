@@ -84,6 +84,7 @@
     <Compile Include="Tests\TestQueen.cs" />
     <Compile Include="Tests\TestRook.cs" />
     <Compile Include="Tests\TestShahMate.cs" />
+    <Compile Include="Tests\TestStalemate.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -105,6 +106,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\Для тестов мата.docx" />
+    <None Include="Resources\Для тестов пата.docx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
