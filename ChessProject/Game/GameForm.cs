@@ -1,6 +1,5 @@
 ﻿using ChessProject.Game;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -14,7 +13,6 @@ namespace ChessProject
         Label currentPlayerLabel;
         Button restart;
         Timer timer = new Timer(); 
-        //Stopwatch timer = new Stopwatch();
         TextBox passedTime;
         DateTime time;
 
@@ -279,6 +277,7 @@ namespace ChessProject
                   MessageBoxIcon.Information,
                   MessageBoxDefaultButton.Button1,
                   MessageBoxOptions.DefaultDesktopOnly);
+                timer.Stop();
             }
             else if (game.IsStalemate())
             {
@@ -289,6 +288,7 @@ namespace ChessProject
                 MessageBoxIcon.Information,
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
+                timer.Stop();
             }
         }
 
