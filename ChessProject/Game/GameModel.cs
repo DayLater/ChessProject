@@ -20,6 +20,7 @@ namespace ChessProject
         //Карта
         public readonly Map Map = new Map();
 
+        public King CurrentKing { get { return FindCurrentKing(); } }
         public IFigure PreviousFigure { get; set; }
         public IFigure CurrentFigure { get; set; }
 
@@ -108,23 +109,16 @@ namespace ChessProject
             figure.Move(newPos);
         }
 
-        //Хранит позицию короля, которому сделали шах
-        public Position KingPositionAtStake { get; private set; }
 
-        //Есть ли шах
-        public bool IsShah()
+        public void MakeTurn(Position newPos)
         {
-            var figure = Map[PreviousFigure.Position.X, PreviousFigure.Position.Y];
-            var positions = figure.FindPosibleWays(Map);
-            if (figure is Pawn)
-                positions = positions.Where(p => p.Y != figure.Position.Y).ToList();
-            foreach (var pos in positions)
-                if (Map[pos.X, pos.Y] is King && figure.Player != Map[pos.X, pos.Y].Player) //если  фигура чужой король
-                {
-                    KingPositionAtStake = pos;
-                    return true;
-                }
-            return false;
+            MakeTurn(newPos, PreviousFigure);
+        }
+
+        public bool IsShah(out IFigure shahFigure, out King shahKing)
+        {
+            shahKing = FindCurrentKing();
+            return IsShah(Map, shahKing, out shahFigure);
         }
 
         bool IsShah(Map map, King shahKing, out IFigure shahFigure)

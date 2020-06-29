@@ -12,8 +12,10 @@ namespace ChessProject
         public Position Position { get;  set; }
         public Player Player { get; }
         public string Picture => Player.Color == PlayerColor.Black? "♝" : "♗";
-
-        public void Move(Position newPosition) => Position = newPosition;
+        public void Move(Position newPosition)
+        {
+            Position = new Position(newPosition.X, newPosition.Y);
+        }
 
         public Elephant(Position position, Player player)
         {

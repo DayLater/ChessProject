@@ -22,7 +22,7 @@ namespace ChessProject
 
         public void Move(Position newPosition)
         {
-            Position = newPosition;
+            Position = new Position(newPosition.X, newPosition.Y);
             IsFirstStep = false;
         }
 

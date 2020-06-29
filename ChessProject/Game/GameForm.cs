@@ -1,6 +1,5 @@
 ﻿using ChessProject.Game;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -25,6 +24,7 @@ namespace ChessProject
             game.Start();
             game.SwapPlayer();
             SwapPlayers();
+            UpdateMap();
         }
 
         /// <summary>
@@ -41,32 +41,36 @@ namespace ChessProject
             {
                 //если прошлая фигура все же есть и она того же игрока. При этом game.PosiblePositions не пуст
                 if (game.PreviousFigure != null && game.IsSamePlayer && game.PosiblePositions != null)
-                    UpdateColorPosition();
+                    UpdateMap();
                 //если это первое нажатие на фигуру или выбрали фигуру того же игрока
                 if (game.PreviousFigure == null || game.IsSamePlayer)
-                {
-                    game.FindPosibleWays(); //ищем возможные ходы
-                    foreach (var pos in game.PosiblePositions)
-                    {
-                        buttons[pos.X, pos.Y].BackColor = Color.Green; //помечаем их зеленым
-                        buttons[pos.X, pos.Y].Enabled = true; //даем возмонжость нажать на эти клетки
-                    }
-                    pressedCell.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
-                }
+                    ShowPosiblePositions(pressedCell);
             }
             // Если нажали на пустую клетку или на фигуру противника 
             else if (game.CurrentFigure == null || !game.IsSamePlayer)
             {
-                var newPos = new Position(pressedCell.Position.X, pressedCell.Position.Y);//нашли новоую позицию
-                game.MakeTurn(newPos, game.PreviousFigure); //сделали туда ход
-                UpdateMap(); //обновили карту 
-                if (game.IsShah())
-                {
-                    buttons[game.PreviousFigure.Position.X, game.PreviousFigure.Position.Y].BackColor = Color.DeepSkyBlue; //помечаем фигуру, сделавшую шах
-                    buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].BackColor = Color.Red; //помечаем красным
-                    buttons[game.KingPositionAtStake.X, game.KingPositionAtStake.Y].Enabled = false; //нельзя убить
-                }
+                game.MakeTurn(pressedCell.Position); //сделали туда ход
                 SwapPlayers(); //Поменяли игроков местами
+            }
+        }
+
+        void ShowPosiblePositions(CellButton pressedCell)
+        {
+            game.FindPosibleWays(); //ищем возможные ходы
+            foreach (var pos in game.PosiblePositions)
+            {
+                buttons[pos.X, pos.Y].BackColor = Color.Green; //помечаем их зеленым
+                buttons[pos.X, pos.Y].Enabled = true; //даем возмонжость нажать на эти клетки
+            }
+            pressedCell.BackColor = Color.YellowGreen; //нажатую кнопку выделели 
+        }
+
+        void RefreshShahColor()
+        {
+            if (game.IsShah(out IFigure shahFigure, out King shahKing))
+            {
+                buttons[shahFigure.Position.X, shahFigure.Position.Y].BackColor = Color.DeepSkyBlue; //помечаем фигуру, сделавшую шах
+                buttons[shahKing.Position.X, shahKing.Position.Y].BackColor = Color.Red; //помечаем красным
             }
         }
 
@@ -188,7 +192,6 @@ namespace ChessProject
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                     buttons[i, j] = MakeButton(i, j);
-            UpdateMap();
         }
 
         /// <summary>
@@ -224,24 +227,9 @@ namespace ChessProject
                 var form = new PawnTransformationForm(game.PreviousFigure);
                 form.ShowDialog();
                 game.PawnTransformation(form.Figure);
-                UpdateMap();
             }
-            game.SwapPlayer(); //поменяли игроков местами
-
-            if (game.CurrentPlayer.Color == PlayerColor.White)
-                currentPlayerLabel.Text = "Ходят белые";
-            else currentPlayerLabel.Text = "Ходят черные";
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                {
-                    var figure = game.Map[i, j];
-                    if (figure != null)
-                    {
-                        if (figure.Player == game.CurrentPlayer)
-                            buttons[i, j].Enabled = true;
-                        else buttons[i, j].Enabled = false;
-                    }
-                }
+            game.SwapPlayer(); //поменяли игроков местами                
+            UpdateMap(); //обновили карту 
             if (game.IsMate())
             {
                 MessageBox.Show(
@@ -270,18 +258,32 @@ namespace ChessProject
         /// </summary>
         void UpdateMap()
         {
+            if (game.CurrentPlayer.Color == PlayerColor.White)
+                currentPlayerLabel.Text = "Ходят белые";
+            else currentPlayerLabel.Text = "Ходят черные";
+
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                 {
-                    if (game.Map[i, j] is IFigure)
-                        buttons[i, j].Text = game.Map[i, j].Picture;
-                    else buttons[i, j].Text = "";
-
-                    var button = buttons[i, j];
+                    var button = buttons[i, j];                    
                     if ((i + j) % 2 == 1) button.BackColor = Color.Brown;
                     else button.BackColor = Color.OldLace;
-                    if (button.Text == "") button.Enabled = false;
+
+                    var figure = game.Map[i, j];
+                    if (figure != null)
+                    {
+                        button.Text = game.Map[i, j].Picture;
+                        if (figure.Player == game.CurrentPlayer)
+                            button.Enabled = true;
+                        else button.Enabled = false;
+                    }
+                    else
+                    {
+                        button.Text = "";
+                        button.Enabled = false;
+                    }
                 }
+            RefreshShahColor();
         }
 
         /// <summary>
@@ -289,6 +291,7 @@ namespace ChessProject
         /// </summary>
         void UpdateColorPosition()
         {
+            game.FindPosibleWays();
             var list = game.PosiblePositions;
             list.Add(game.PreviousFigure.Position);
             foreach (var cell in list)
