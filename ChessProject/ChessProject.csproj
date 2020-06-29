@@ -61,6 +61,7 @@
     <Compile Include="Game\CellButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Game\Map.cs" />
     <Compile Include="Game\PawnTransformationForm.cs">
       <SubType>Form</SubType>
     </Compile>

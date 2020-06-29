@@ -20,17 +20,17 @@ namespace ChessProject
             Player = player;
         }
 
-        public List<Position> FindPosibleWays(IFigure[,] map)
+        public List<Position> FindPosibleWays(Map map)
         {
             return FindPosibleWaysBySelector(map, (figure) => figure.Player != Player, figure => true);
         }
 
-        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        public List<Position> UnacceptablePositionsForKing(Map map)
         {
             return FindPosibleWaysBySelector(map, x => true, figure => !(figure is King && figure.Player != Player));
         }
 
-        List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector, Func<IFigure, bool> breakSelector)
+        List<Position> FindPosibleWaysBySelector(Map map, Func<IFigure, bool> selector, Func<IFigure, bool> breakSelector)
         {
             var result = new List<Position>();
             this.FindPosiblePositionsInDirection(result, 0, 1, map, selector, breakSelector);

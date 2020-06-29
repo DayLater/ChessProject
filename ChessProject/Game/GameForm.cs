@@ -219,7 +219,15 @@ namespace ChessProject
         /// </summary>
         void SwapPlayers()
         {
+            if (game.IsPawnTransformation())
+            {
+                var form = new PawnTransformationForm(game.PreviousFigure);
+                form.ShowDialog();
+                game.PawnTransformation(form.Figure);
+                UpdateMap();
+            }
             game.SwapPlayer(); //поменяли игроков местами
+
             if (game.CurrentPlayer.Color == PlayerColor.White)
                 currentPlayerLabel.Text = "Ходят белые";
             else currentPlayerLabel.Text = "Ходят черные";
@@ -234,13 +242,6 @@ namespace ChessProject
                         else buttons[i, j].Enabled = false;
                     }
                 }
-            if (game.IsPawnTransformation())
-            {
-                var form = new PawnTransformationForm(game.PreviousFigure);
-                form.ShowDialog();
-                game.PawnTransformation(form.Figure);
-                UpdateMap();
-            }
             if (game.IsMate())
             {
                 MessageBox.Show(

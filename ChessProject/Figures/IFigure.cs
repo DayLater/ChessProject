@@ -24,7 +24,7 @@ namespace ChessProject
         /// </summary>
         /// <param name="map"></param>
         /// <returns></returns>
-        List<Position> FindPosibleWays(IFigure[,] map);
+        List<Position> FindPosibleWays(Map map);
 
         /// <summary>
         /// Метод возвращающий лист неподходящих позиций для вражеского короля от данной фигуры
@@ -32,6 +32,6 @@ namespace ChessProject
         /// </summary>
         /// <param name="map"></param>
         /// <returns></returns>
-        List<Position> UnacceptablePositionsForKing(IFigure[,] map); 
+        List<Position> UnacceptablePositionsForKing(Map map); 
     }
 }

@@ -18,7 +18,7 @@ namespace ChessProject
         public List<Position> PosiblePositions { get; set; }
         public Player CurrentPlayer { get; private set; }
         //Карта
-        public readonly IFigure[,] Map = new IFigure[8, 8];
+        public readonly Map Map = new Map();
 
         public IFigure PreviousFigure { get; set; }
         public IFigure CurrentFigure { get; set; }
@@ -66,15 +66,15 @@ namespace ChessProject
                 dx = -1;
             }
             for (int i = 0; i < 8; i++)
-                Map[side + dx, i] = new Pawn(new Position(side + dx, i), player);
-            Map[side, 0] = new Rook(new Position(side, 0), player);
-            Map[side, 7] = new Rook(new Position(side, 7), player);
-            Map[side, 1] = new Horse(new Position(side, 1), player);
-            Map[side, 6] = new Horse(new Position(side, 6), player);
-            Map[side, 2] = new Elephant(new Position(side, 2), player);
-            Map[side, 5] = new Elephant(new Position(side, 5), player);
-            Map[side, 3] = new Queen(new Position(side, 3), player);
-            Map[side, 4] = new King(new Position(side, 4), player);
+                Map.Add(new Pawn(new Position(side + dx, i), player));
+            Map.Add(new Rook(new Position(side, 0), player));
+            Map.Add(new Rook(new Position(side, 7), player));
+            Map.Add(new Horse(new Position(side, 1), player));
+            Map.Add(new Horse(new Position(side, 6), player));
+            Map.Add(new Elephant(new Position(side, 2), player));
+            Map.Add(new Elephant(new Position(side, 5), player));
+            Map.Add(new Queen(new Position(side, 3), player));
+            Map.Add(new King(new Position(side, 4), player));
         }
 
         //Метод для поиска пути конкретной фигуры
@@ -91,7 +91,7 @@ namespace ChessProject
             var figurePos = new Position(figure.Position.X, figure.Position.Y);
             foreach (var pos in figurePosiblePositions)
             {
-                var tempMap = (IFigure[,])Map.Clone();
+                var tempMap = Map.Clone();
                 tempMap[figurePos.X, figurePos.Y].Position = new Position(pos.X, pos.Y);
                 tempMap[pos.X, pos.Y] = tempMap[figurePos.X, figurePos.Y];
                 tempMap[figurePos.X, figurePos.Y] = null;
@@ -127,7 +127,7 @@ namespace ChessProject
             return false;
         }
 
-        bool IsShah(IFigure[,] map, King shahKing, out IFigure shahFigure)
+        bool IsShah(Map map, King shahKing, out IFigure shahFigure)
         {
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
@@ -166,7 +166,7 @@ namespace ChessProject
             if (IsShah(Map, king, out IFigure shahFigure))
                 return false;
             var listPositionsPlayer = new List<Position>();
-            foreach (var figure in Map)
+            foreach (IFigure figure in Map)
             {
                 if (figure != null && figure.Player.Equals(king.Player))
                     AddCorrectMoves(figure, king.Position, listPositionsPlayer);
@@ -186,7 +186,7 @@ namespace ChessProject
             var path = GetPositionsThreateningTheKing(king.Position, shahFigure.Position);
             if (king.FindPosibleWays(Map).Count == 0)
             {
-                foreach (var figure in Map)
+                foreach (IFigure figure in Map)
                     if (figure != null && figure.Player.Equals(king.Player))
                         AddCorrectMoves(figure, king.Position, listPositionsPlayer);
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();

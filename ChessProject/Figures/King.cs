@@ -21,7 +21,7 @@ namespace ChessProject
         }
 
         //поиск пути для короля
-        public List<Position> FindPosibleWays(IFigure[,] map)
+        public List<Position> FindPosibleWays(Map map)
         {
             var allPosiblePositions = new List<Position>();
             for (int i = -1; i < 2; i++)
@@ -47,8 +47,8 @@ namespace ChessProject
         }
 
         //ищем позиции в одном направлении
-        void FindPosiblePositionsInDirection(List<Position> result, int dx, int dy, 
-            IFigure[,] map, Func<IFigure, bool> selector)
+        void FindPosiblePositionsInDirection(List<Position> result, int dx, int dy,
+            Map map, Func<IFigure, bool> selector)
         {
             int x = Position.X + dx;
             int y = Position.Y + dy;
@@ -61,7 +61,7 @@ namespace ChessProject
             }
         }
 
-        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        public List<Position> UnacceptablePositionsForKing(Map map)
         {
             var allPosiblePositions = new List<Position>();
             for (int i = -1; i < 2; i++)

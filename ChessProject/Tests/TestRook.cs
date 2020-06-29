@@ -16,7 +16,7 @@ namespace ChessProject.Figures
         [Test]
         public void FindPosibleWaysWithoutEnemies()
         {
-            IFigure[,] map = new IFigure[8, 8];
+            var map = new Map();
             Rook rook = new Rook(new Position(2, 1), whitePlayer);
             var expected = new[]
             {
@@ -34,7 +34,7 @@ namespace ChessProject.Figures
         [Test]
         public void FindPosibleWaysWithEnemies()
         {
-            IFigure[,] map = new IFigure[8, 8];
+            var map = new Map();
             Elephant elephantWhite = new Elephant(new Position(5, 1), whitePlayer);
             Elephant elephantBlack = new Elephant(new Position(2, 4), blackPlayer);
             Rook rookWhite = new Rook(new Position(2, 1), whitePlayer);

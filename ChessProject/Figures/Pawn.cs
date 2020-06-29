@@ -26,7 +26,7 @@ namespace ChessProject
             IsFirstStep = false;
         }
 
-        public List<Position> FindPosibleWays(IFigure[,] map)
+        public List<Position> FindPosibleWays(Map map)
         {
             var result = new List<Position>();
             var dx = -1; 
@@ -35,7 +35,7 @@ namespace ChessProject
             return result;
         }
 
-        void FindPosiblePositionsInDirection(List<Position> positions, int dx, IFigure[,] map)
+        void FindPosiblePositionsInDirection(List<Position> positions, int dx, Map map)
         {
             int x = Position.X + dx;
             for (int i = -1; i < 2; i++)
@@ -56,7 +56,7 @@ namespace ChessProject
         }
 
         #region Методы необходимые для поиска неподходящий позиция для короля
-        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        public List<Position> UnacceptablePositionsForKing(Map map)
         {
             var result = new List<Position>();
             var dx = -1; 

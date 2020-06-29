@@ -18,17 +18,17 @@ namespace ChessProject
             Player = player;
         }
 
-        public List<Position> FindPosibleWays(IFigure[,] map)
+        public List<Position> FindPosibleWays(Map map)
         {
             return FindPosibleWaysBySelector(map, figure => figure.Player != Player);
         }
 
-        public List<Position> UnacceptablePositionsForKing(IFigure[,] map)
+        public List<Position> UnacceptablePositionsForKing(Map map)
         {
             return FindPosibleWaysBySelector(map, figure => true);
         }
 
-        public void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, IFigure[,] map, Func<IFigure, bool> selector)
+        public void FindPosiblePositionsInDirection(List<Position> positions, int dx, int dy, Map map, Func<IFigure, bool> selector)
         {
             int x = Position.X + dx;
             int y = Position.Y + dy;
@@ -41,7 +41,7 @@ namespace ChessProject
             }
         }
 
-        public List<Position> FindPosibleWaysBySelector(IFigure[,] map, Func<IFigure, bool> selector)
+        public List<Position> FindPosibleWaysBySelector(Map map, Func<IFigure, bool> selector)
         {
             var result = new List<Position>();
             (int, int)[] positions = { (-1, -2), (-2, -1), (1, -2), (2, -1), (-2, 1), (-1, 2), (2, 1), (1, 2) };

@@ -9,8 +9,29 @@ namespace ChessProject
     // класс позиции
     public class Position
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        int x; 
+        public int X 
+        { 
+            get { return x; }
+            set 
+            {
+                if (value >= 0 && value < 8)
+                    x = value;
+                else throw new ArgumentException();
+            } 
+        }
+
+        int y; 
+        public int Y 
+        {
+            get { return y; }
+            set
+            {
+                if (value >= 0 && value < 8)
+                    y = value;
+                else throw new ArgumentException();
+            }
+        }
 
         public Position(int x, int y)
         {
@@ -21,7 +42,7 @@ namespace ChessProject
         //Переопределил для возможности тестов
         public override bool Equals(object obj)
         {
-            var pos = obj as Position;
+            Position pos = obj as Position;
             if (pos is null) return false;
             return X == pos.X && Y == pos.Y;
         }
