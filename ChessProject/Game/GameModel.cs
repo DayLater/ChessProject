@@ -25,6 +25,44 @@ namespace ChessProject
 
         public bool IsSamePlayer { get { return PreviousFigure.Player == CurrentFigure.Player; } }
 
+        TransformedMaps transformedMaps = new TransformedMaps();
+
+        public void RememberMap()
+        {
+            if (CurrentPlayer == white)
+                transformedMaps.RememberMap(Map);
+        }
+
+        public bool IsRepeatedMapDraw()
+        {
+           return transformedMaps.IsDraw();
+        }
+
+        //проверка на невозможность мата. Если мат невозможен => ничья
+        public bool isImposibleMate()
+        {
+            List<IFigure> figures = new List<IFigure>(); 
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    if (Map[i, j] != null)
+                        figures.Add(Map[i, j]);
+                    if (figures.Count > 3)
+                        return false;
+                }
+            if (figures.Count < 2)
+                throw new Exception("Фигур не может быть меньше 2. Короли умереть не могут");
+            else if (figures.Count == 2)
+                return true;
+            else
+            {
+                foreach (var figure in figures)
+                    if (figure is Elephant || figure is Horse)
+                        return true;
+            }
+            return false;
+        }
+
         public void GetCurrentFigure(Position figurePosition)
         {
             PreviousFigure = CurrentFigure;

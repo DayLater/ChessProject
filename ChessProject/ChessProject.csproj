@@ -65,6 +65,7 @@
     <Compile Include="Game\PawnTransformationForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Game\TransformedMaps.cs" />
     <Compile Include="Player\PlayerColor.cs" />
     <Compile Include="Figures\Elephant.cs" />
     <Compile Include="Figures\Pawn.cs" />

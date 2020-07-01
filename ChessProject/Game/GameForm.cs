@@ -266,6 +266,7 @@ namespace ChessProject
                 form.ShowDialog();
                 game.PawnTransformation(form.Figure);
             }
+            game.RememberMap();
             game.SwapPlayer(); //поменяли игроков местами                
             UpdateMap(); //обновили карту 
             if (game.IsMate())
@@ -277,7 +278,7 @@ namespace ChessProject
                   MessageBoxIcon.Information,
                   MessageBoxDefaultButton.Button1,
                   MessageBoxOptions.DefaultDesktopOnly);
-                timer.Stop();
+                EndGame();
             }
             else if (game.IsStalemate())
             {
@@ -288,8 +289,21 @@ namespace ChessProject
                 MessageBoxIcon.Information,
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
-                timer.Stop();
+                EndGame();
             }
+            if (game.IsRepeatedMapDraw())
+            {
+                MessageBox.Show("Карта повторилась 3 раза. Объявлена ничья", "Ничья");
+                EndGame();
+            }
+        }
+
+        void EndGame()
+        {
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                    buttons[i, j].Enabled = false;
+            timer.Stop();
         }
 
         /// <summary>
