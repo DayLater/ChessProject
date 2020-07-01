@@ -69,6 +69,7 @@
     <Compile Include="Player\PlayerColor.cs" />
     <Compile Include="Figures\Elephant.cs" />
     <Compile Include="Figures\Pawn.cs" />
+    <Compile Include="Tests\TestDraw.cs" />
     <Compile Include="Tests\TestElephant.cs" />
     <Compile Include="Figures\IFigure.cs" />
     <Compile Include="Tests\TestHorse.cs" />
