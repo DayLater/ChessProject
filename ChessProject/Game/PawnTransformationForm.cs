@@ -13,80 +13,44 @@ namespace ChessProject.Game
     public partial class PawnTransformationForm : Form
     {
         public IFigure Figure { get; private set; }
+        Button queenButton = new Button();
+        Button horseButton = new Button();
+        Button rookButton = new Button();
+        Button elephantButton = new Button();
+        Label label1 = new Label();
 
         public PawnTransformationForm(IFigure figure)
         {
-            InitializeComponent();
             Figure = new Queen(figure.Position, figure.Player);
+            var texts = new[] { new[] { "Ферзь", "Конь" } , new[] { "Ладья", "Слон" } };
+            var buttons = new[] { new[] { queenButton, horseButton }, new[] { rookButton, elephantButton } };
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 2; j++)
+                    CreateButton(buttons[i][j], texts[i][j], i, j);
+            ClientSize = new Size(160, 140);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Text = "Замена пешки";
+            BackColor = Color.GhostWhite;
+            label1.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            label1.Location = new Point(0, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(160, 20);
+            label1.TabIndex = 4;
+            label1.Text = "Выберите фигуру:";
+            Controls.Add(label1);
             queenButton.Click += (s, a) => { Close(); };
             horseButton.Click += (s, a) => { Figure = new Horse(figure.Position, figure.Player); Close(); };
             rookButton.Click += (s, a) => { Figure = new Rook(figure.Position, figure.Player); Close(); };
             elephantButton.Click += (s, a) => { Figure = new Elephant(figure.Position, figure.Player); Close(); };
         }
 
-        private void InitializeComponent()
+        void CreateButton(Button button, string text, int i, int j)
         {
-            this.queenButton = new Button();
-            this.horseButton = new Button();
-            this.rookButton = new Button();
-            this.elephantButton = new Button();
-            this.label1 = new Label();
-            this.SuspendLayout();
-
-            this.queenButton.Location = new Point(25, 70);
-            this.queenButton.Name = "queenButton";
-            this.queenButton.Size = new Size(80, 80);
-            this.queenButton.TabIndex = 0;
-            this.queenButton.Text = "Ферзь";
-            this.queenButton.UseVisualStyleBackColor = true;
-
-            this.horseButton.Location = new Point(111, 70);
-            this.horseButton.Name = "horseButton";
-            this.horseButton.Size = new Size(80, 80);
-            this.horseButton.TabIndex = 1;
-            this.horseButton.Text = "Конь";
-            this.horseButton.UseVisualStyleBackColor = true;
-            
-            this.rookButton.Location = new Point(25, 156);
-            this.rookButton.Name = "rookButton";
-            this.rookButton.Size = new Size(80, 80);
-            this.rookButton.TabIndex = 2;
-            this.rookButton.Text = "Ладья";
-            this.rookButton.UseVisualStyleBackColor = true;
-
-            this.elephantButton.Location = new Point(111, 156);
-            this.elephantButton.Name = "elephantButton";
-            this.elephantButton.Size = new Size(80, 80);
-            this.elephantButton.TabIndex = 3;
-            this.elephantButton.Text = "Слон";
-            this.elephantButton.UseVisualStyleBackColor = true;
-
-            this.label1.AutoSize = true;
-            this.label1.Font = new Font("Times New Roman", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new Point(21, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new Size(156, 21);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Выберите фигуру:";
-
-            this.AutoScaleDimensions = new SizeF(6F, 13F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(224, 261);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.elephantButton);
-            this.Controls.Add(this.rookButton);
-            this.Controls.Add(this.horseButton);
-            this.Controls.Add(this.queenButton);
-            this.Name = "PawnTransformationForm";
-            this.Text = "Замена пешки";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            button.Location = new Point(80 * j, 20 + 60 * i);
+            button.Size = new Size(80, 60);
+            button.Text = text;
+            button.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            Controls.Add(button);
         }
-
-        private Button queenButton;
-        private Button horseButton;
-        private Button rookButton;
-        private Button elephantButton;
-        private Label label1;
     }
 }

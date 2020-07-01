@@ -16,12 +16,9 @@ namespace ChessProject
         public List<Position> PosiblePositions { get; set; }
         public Player CurrentPlayer { get; private set; }
         public readonly Map Map = new Map();
-
-        public IFigure PreviousFigure { get; set; }
-        public IFigure CurrentFigure { get; set; }
-
+        public IFigure PreviousFigure { get; private set; }
+        public IFigure CurrentFigure { get; private set; }
         public bool IsSamePlayer { get { return PreviousFigure.Player == CurrentFigure.Player; } }
-
         TransformedMaps transformedMaps = new TransformedMaps();
 
         //запоминаем карту
@@ -190,7 +187,7 @@ namespace ChessProject
         }
 
         //проверка на невозможность мата. Если мат невозможен => ничья
-        public bool IsImposibleMate()
+        bool IsImposibleMate()
         {
             List<IFigure> figures = new List<IFigure>();
             for (int i = 0; i < 8; i++)
@@ -215,7 +212,7 @@ namespace ChessProject
         }
 
         //проверка на пат
-        public bool IsStalemate(King king)
+        bool IsStalemate(King king)
         {
             var listPositionsPlayer = new List<Position>();
             foreach (IFigure figure in Map)
@@ -229,7 +226,7 @@ namespace ChessProject
         }
 
         //проверка на мат
-        public bool IsMate(King king, IFigure shahFigure)
+        bool IsMate(King king, IFigure shahFigure)
         {
             var listPositionsPlayer = new List<Position>();
             var path = GetPositionsThreateningTheKing(king.Position, shahFigure.Position);

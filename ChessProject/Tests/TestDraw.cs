@@ -22,19 +22,19 @@ namespace ChessProject.Tests
             game.SwapPlayer();
             map.Add(new King(new Position(7, 7), game.CurrentPlayer));
             //проверка на 2 короля и одного слона
-            Assert.AreEqual(true, game.IsImposibleMate());
+            Assert.AreEqual("Мат в данных обстоятельствах невозможен. Ничья", game.FindStateOfGame());
 
             //проверка на 2-х королей
             map[1, 1] = null;
-            Assert.AreEqual(true, game.IsImposibleMate());
+            Assert.AreEqual("Мат в данных обстоятельствах невозможен. Ничья", game.FindStateOfGame());
 
             //проверка на 2 короля и башню
             map.Add(new Rook(new Position(1, 1), game.CurrentPlayer));
-            Assert.AreEqual(false, game.IsImposibleMate());
+            Assert.AreEqual(null, game.FindStateOfGame());
 
             //проверка на коня и двух королей
             map[1, 1] = new Horse(new Position(1, 1), game.CurrentPlayer);
-            Assert.AreEqual(true, game.IsImposibleMate());
+            Assert.AreEqual("Мат в данных обстоятельствах невозможен. Ничья", game.FindStateOfGame());
         }
     }
 }
