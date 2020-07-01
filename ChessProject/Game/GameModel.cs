@@ -128,6 +128,21 @@ namespace ChessProject
             MakeTurn(newPos, PreviousFigure);
         }
 
+        //поиск короля текущего игрока
+        King FindCurrentKing()
+        {
+            King king = null;
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    IFigure figure = Map[i, j];
+                    if (figure != null && figure is King && figure.Player == CurrentPlayer)
+                        king = (King)figure;
+                }
+            return king;
+        }
+
+        #region Проверки игры на шах, мат, пат и ничью
         //проверка на шах для формы
         public bool IsShah(out IFigure shahFigure, out King shahKing)
         {
@@ -156,22 +171,8 @@ namespace ChessProject
             return false;
         }
 
-        //поиск короля текущего игрока
-        King FindCurrentKing()
-        {
-            King king = null;
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                {
-                    IFigure figure = Map[i, j];
-                    if (figure != null && figure is King && figure.Player == CurrentPlayer)
-                        king = (King)figure;
-                }
-            return king;
-        }
-
         //Находим состояние игры. Если все норм, то null
-        public string StateOfGame()
+        public string FindStateOfGame()
         {
             var king = FindCurrentKing();
             if (IsImposibleMate())
@@ -244,6 +245,7 @@ namespace ChessProject
             }
             return false;
         }
+        #endregion
 
         //поиск всеможнных позиций для защиты короля
         List<Position> GetPositionsThreateningTheKing(Position kingPosition, Position figurePosition)

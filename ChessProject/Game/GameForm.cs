@@ -270,7 +270,7 @@ namespace ChessProject
             game.RememberMap();
             game.SwapPlayer(); //поменяли игроков местами                
             UpdateMap(); //обновили карту 
-            var stateOfGame = game.StateOfGame();
+            var stateOfGame = game.FindStateOfGame();
             if (stateOfGame != null)
             {
                 MessageBox.Show(
