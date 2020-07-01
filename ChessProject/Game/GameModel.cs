@@ -1,6 +1,4 @@
-﻿using ChessProject.Figures;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,7 +15,6 @@ namespace ChessProject
         Player black = new Player(PlayerColor.Black);
         public List<Position> PosiblePositions { get; set; }
         public Player CurrentPlayer { get; private set; }
-        //Карта
         public readonly Map Map = new Map();
 
         public IFigure PreviousFigure { get; set; }
@@ -27,53 +24,27 @@ namespace ChessProject
 
         TransformedMaps transformedMaps = new TransformedMaps();
 
+        //запоминаем карту
         public void RememberMap()
         {
             if (CurrentPlayer == white)
                 transformedMaps.RememberMap(Map);
         }
 
-        public bool IsRepeatedMapDraw()
-        {
-           return transformedMaps.IsDraw();
-        }
-
-        //проверка на невозможность мата. Если мат невозможен => ничья
-        public bool isImposibleMate()
-        {
-            List<IFigure> figures = new List<IFigure>(); 
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 8; j++)
-                {
-                    if (Map[i, j] != null)
-                        figures.Add(Map[i, j]);
-                    if (figures.Count > 3)
-                        return false;
-                }
-            if (figures.Count < 2)
-                throw new Exception("Фигур не может быть меньше 2. Короли умереть не могут");
-            else if (figures.Count == 2)
-                return true;
-            else
-            {
-                foreach (var figure in figures)
-                    if (figure is Elephant || figure is Horse)
-                        return true;
-            }
-            return false;
-        }
-
-        public void GetCurrentFigure(Position figurePosition)
+        //Даем значение текущей фигуре
+        public void SetCurrentFigure(Position figurePosition)
         {
             PreviousFigure = CurrentFigure;
             CurrentFigure = Map[figurePosition.X, figurePosition.Y];
         }
 
+        //начало игры
         public void Start()
         {
             CurrentPlayer = white;
         }
 
+        //поменять игроков местами
         public void SwapPlayer()
         {
             if (CurrentPlayer == white) CurrentPlayer = black;
@@ -81,11 +52,13 @@ namespace ChessProject
             PreviousFigure = null;
         }
 
+        //конструктор
         public GameModel()
         {
             CreateMap();
         }
 
+        #region Создание модели
         //Метод для заполнения карты фигурами
         void CreateMap()
         {
@@ -114,16 +87,18 @@ namespace ChessProject
             Map.Add(new Queen(new Position(side, 3), player));
             Map.Add(new King(new Position(side, 4), player));
         }
+        #endregion
 
-        //Метод для поиска пути конкретной фигуры
-        public void FindPosibleWays()
+        //Метод для поиска пути текущей фигуры
+        public void FindPosiblePositions()
         {
             PosiblePositions = new List<Position>();
             var king = FindCurrentKing();
-            AddCorrectMoves(CurrentFigure, king.Position, PosiblePositions);
+            FindCorrectPositions(CurrentFigure, king.Position, PosiblePositions);
         }
 
-        void AddCorrectMoves(IFigure figure, Position kingPosition, List<Position> positions)
+        //Отфильтровать только возможные ходы
+        void FindCorrectPositions(IFigure figure, Position kingPosition, List<Position> positions)
         {
             var figurePosiblePositions = figure.FindPosibleWays(Map);
             var figurePos = new Position(figure.Position.X, figure.Position.Y);
@@ -139,6 +114,7 @@ namespace ChessProject
             }
         }
 
+        //сделать ход для тестов
         public void MakeTurn(Position newPos, IFigure figure)
         {
             Map[figure.Position.X, figure.Position.Y] = null;
@@ -146,17 +122,20 @@ namespace ChessProject
             figure.Move(newPos);
         }
 
+        //сделать ход для формы
         public void MakeTurn(Position newPos)
         {
             MakeTurn(newPos, PreviousFigure);
         }
 
+        //проверка на шах для формы
         public bool IsShah(out IFigure shahFigure, out King shahKing)
         {
             shahKing = FindCurrentKing();
             return IsShah(Map, shahKing, out shahFigure);
         }
 
+        //проверка на шах внутренняя
         bool IsShah(Map map, King shahKing, out IFigure shahFigure)
         {
             for (int i = 0; i < 8; i++)
@@ -177,6 +156,7 @@ namespace ChessProject
             return false;
         }
 
+        //поиск короля текущего игрока
         King FindCurrentKing()
         {
             King king = null;
@@ -190,35 +170,73 @@ namespace ChessProject
             return king;
         }
 
-        public bool IsStalemate()
+        //Находим состояние игры. Если все норм, то null
+        public string StateOfGame()
         {
             var king = FindCurrentKing();
+            if (IsImposibleMate())
+                return "Мат в данных обстоятельствах невозможен. Ничья";
             if (IsShah(Map, king, out IFigure shahFigure))
-                return false;
+            {
+                if (IsMate(king, shahFigure))
+                    return "Шах и мат";
+            }
+            else if (IsStalemate(king))
+                return "Пат. Ничья";
+            else if (transformedMaps.IsRepeatedMapDraw())
+                return "Карты повторилась 3 раза. Ничья";
+            return null;
+        }
+
+        //проверка на невозможность мата. Если мат невозможен => ничья
+        public bool IsImposibleMate()
+        {
+            List<IFigure> figures = new List<IFigure>();
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    if (Map[i, j] != null)
+                        figures.Add(Map[i, j]);
+                    if (figures.Count > 3)
+                        return false;
+                }
+            if (figures.Count < 2)
+                throw new Exception("Фигур не может быть меньше 2. Короли умереть не могут");
+            else if (figures.Count == 2)
+                return true;
+            else
+            {
+                foreach (var figure in figures)
+                    if (figure is Elephant || figure is Horse)
+                        return true;
+            }
+            return false;
+        }
+
+        //проверка на пат
+        public bool IsStalemate(King king)
+        {
             var listPositionsPlayer = new List<Position>();
             foreach (IFigure figure in Map)
             {
                 if (figure != null && figure.Player.Equals(king.Player))
-                    AddCorrectMoves(figure, king.Position, listPositionsPlayer);
+                    FindCorrectPositions(figure, king.Position, listPositionsPlayer);
                 if (listPositionsPlayer.Count > 0)
                     return false;
             }
             return true;
         }
 
-        //Есть ли мат
-        public bool IsMate()
+        //проверка на мат
+        public bool IsMate(King king, IFigure shahFigure)
         {
-            var king = FindCurrentKing();
-            if (!IsShah(Map, king, out IFigure shahFigure))
-                return false;
             var listPositionsPlayer = new List<Position>();
             var path = GetPositionsThreateningTheKing(king.Position, shahFigure.Position);
             if (king.FindPosibleWays(Map).Count == 0)
             {
                 foreach (IFigure figure in Map)
                     if (figure != null && figure.Player.Equals(king.Player))
-                        AddCorrectMoves(figure, king.Position, listPositionsPlayer);
+                        FindCorrectPositions(figure, king.Position, listPositionsPlayer);
                 listPositionsPlayer = listPositionsPlayer.Distinct().ToList();
                 foreach (var p in listPositionsPlayer)
                     if (path.Contains(p)) return false;
@@ -227,6 +245,7 @@ namespace ChessProject
             return false;
         }
 
+        //поиск всеможнных позиций для защиты короля
         List<Position> GetPositionsThreateningTheKing(Position kingPosition, Position figurePosition)
         {
             var result = new List<Position>();
@@ -255,6 +274,7 @@ namespace ChessProject
             return result;
         }
 
+        //частный поиск позиций для защиты короля
         void SelectAListOfPositionsThreateningTheKing(Position kingPosition, Position figurePosition,
                                List<Position> path, List<Position> result,
                                Func<Position, Position, bool> predicate)
@@ -264,6 +284,7 @@ namespace ChessProject
                     result.Add(p);
         }
 
+        //проверка достигла ли пешка края
         public bool IsPawnTransformation()
         {
             if (PreviousFigure != null && PreviousFigure is Pawn && (PreviousFigure.Position.X == 0 || PreviousFigure.Position.X == 7))
@@ -271,6 +292,7 @@ namespace ChessProject
             return false;
         }
 
+        //трансормация пешки в другую фигуру
         public void PawnTransformation(IFigure figure)
         {
             Map[PreviousFigure.Position.X, PreviousFigure.Position.Y] = figure;

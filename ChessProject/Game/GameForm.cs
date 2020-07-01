@@ -42,7 +42,7 @@ namespace ChessProject
         void SwapBlocks(object sender, EventArgs e)
         {
             var pressedCell = sender as CellButton; //получили кпопку
-            game.GetCurrentFigure(pressedCell.Position); //получили фигуру
+            game.SetCurrentFigure(pressedCell.Position); //получили фигуру
             //если фигура не пустая и при этом прошлой фигуры нет или прошлая фигура того же игрока, то
             if (game.CurrentFigure != null && (game.PreviousFigure == null || game.IsSamePlayer))
             {
@@ -63,7 +63,7 @@ namespace ChessProject
 
         void ShowPosiblePositions(CellButton pressedCell)
         {
-            game.FindPosibleWays(); //ищем возможные ходы
+            game.FindPosiblePositions(); //ищем возможные ходы
             foreach (var pos in game.PosiblePositions)
             {
                 buttons[pos.X, pos.Y].BackColor = Color.YellowGreen; //помечаем их зеленым
@@ -126,6 +126,7 @@ namespace ChessProject
             UpdateMap();
             SwapPlayers();
             time = new DateTime();
+            timer.Start();
         }
 
         /// <summary>
@@ -269,31 +270,16 @@ namespace ChessProject
             game.RememberMap();
             game.SwapPlayer(); //поменяли игроков местами                
             UpdateMap(); //обновили карту 
-            if (game.IsMate())
+            var stateOfGame = game.StateOfGame();
+            if (stateOfGame != null)
             {
                 MessageBox.Show(
-                  "Шах и мат!",
-                  "Игра окончена",
-                  MessageBoxButtons.OK,
-                  MessageBoxIcon.Information,
-                  MessageBoxDefaultButton.Button1,
-                  MessageBoxOptions.DefaultDesktopOnly);
-                EndGame();
-            }
-            else if (game.IsStalemate())
-            {
-                MessageBox.Show(
-                "Ничья, пат!",
-                "Игра окончена",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.DefaultDesktopOnly);
-                EndGame();
-            }
-            if (game.IsRepeatedMapDraw())
-            {
-                MessageBox.Show("Карта повторилась 3 раза. Объявлена ничья", "Ничья");
+                    stateOfGame,
+                    "Игра окончена",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
                 EndGame();
             }
         }
@@ -338,22 +324,6 @@ namespace ChessProject
                     }
                 }
             RefreshShahColor();
-        }
-
-        /// <summary>
-        /// Метод для возврата цвета клеток к нормальному от зеленого
-        /// </summary>
-        void UpdateColorPosition()
-        {
-            game.FindPosibleWays();
-            var list = game.PosiblePositions;
-            list.Add(game.PreviousFigure.Position);
-            foreach (var cell in list)
-            {
-                if ((cell.X + cell.Y) % 2 == 1) buttons[cell.X, cell.Y].BackColor = Color.Brown;
-                else buttons[cell.X, cell.Y].BackColor = Color.OldLace;
-                if (cell != game.PreviousFigure.Position) buttons[cell.X, cell.Y].Enabled = false;
-            }
         }
     }
 }

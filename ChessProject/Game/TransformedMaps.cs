@@ -41,7 +41,7 @@ namespace ChessProject
 
         //Проверка на ничью
         //если карта за белого 3 раза повторится, то объявлена ничья
-        public bool IsDraw()
+        public bool IsRepeatedMapDraw()
         {
             if (mapStates.Count == 7)
             {
