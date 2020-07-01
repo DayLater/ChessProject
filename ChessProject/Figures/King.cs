@@ -9,13 +9,45 @@ namespace ChessProject
 {
     public class King : IFigure
     {
-        public Position Position { get;  set; }
+        public Position Position { get; set; }
         public Player Player { get; }
         public Image Picture => Player.Color == PlayerColor.Black ? Properties.Resources.KingB : Properties.Resources.KingW;
+        public bool IsFirstStep { get; private set; } = true;
+
+        public bool IsCastlingPosible(Rook rook, Map map)
+        {
+            if (!IsFirstStep || !rook.IsFirstStep)
+                return false;
+            var dy = -1;
+            if (Position.Y < rook.Position.Y) dy = 1;
+            var minIndex = Math.Min(rook.Position.Y, Position.Y);
+            var maxIndex = Math.Max(rook.Position.Y, Position.Y);
+            for (int i = minIndex + 1; i < maxIndex; i++)
+                if (map[Position.X, i] != null)
+                    return false;
+            for (int i = 0; i < 2; i++)
+                if (IsShah(map, new Position(Position.X, Position.Y + i * dy))) 
+                    return false;
+            return true;
+        }
+
+        bool IsShah(Map map, Position position)
+        {
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    var figure = map[i, j];
+                    if (figure != null && figure.Player != Player
+                        && figure.FindPosibleWays(map).Contains(position))
+                        return true;
+                }
+            return false;
+        }
 
         public void Move(Position newPosition)
         {
             Position = new Position(newPosition.X, newPosition.Y);
+            IsFirstStep = false; 
         }
 
         public King(Position position, Player player)

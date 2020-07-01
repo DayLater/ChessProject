@@ -48,5 +48,53 @@ namespace ChessProject.Figures
             var result = king.FindPosibleWays(map);
             Assert.That(result.ToArray(), Is.EquivalentTo(expected));
         }
+
+        [Test]
+        public void IsCastlingPosible()
+        {
+            var game = new GameModel();
+            var map = game.Map;
+            map.Clear();
+            game.Start();
+            var king = new King(new Position(7, 4), game.CurrentPlayer);
+            var rook1 = new Rook(new Position(7, 0), game.CurrentPlayer);
+            map.Add(king);
+            map.Add(rook1);
+            //проверяем возможность на дальнюю рокировку
+            Assert.AreEqual(true, king.IsCastlingPosible(rook1, map));
+
+            //проверяем возможность на ближнюю рокировку
+            var rook2 = new Rook(new Position(7, 7), game.CurrentPlayer);
+            Assert.AreEqual(true, king.IsCastlingPosible(rook2, map));
+
+            //если между королем и башней стоит какая-то другая фигура
+            map.Add(new Horse(new Position(7, 1), game.CurrentPlayer));
+            Assert.AreEqual(false, king.IsCastlingPosible(rook1, map));
+
+            //если между королем и башней стоит какая-то другая фигура
+            map.Add(new Horse(new Position(7, 5), game.CurrentPlayer));
+            Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
+
+            //если шах королю
+            map[7, 5] = null;
+            game.SwapPlayer();
+            map.Add(new Rook(new Position(5, 4), game.CurrentPlayer));
+            Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
+
+            //если шаха нет, но поле пробивается чужой фигурой
+            map[5, 5] = map[5, 4];
+            map[5, 4] = null;
+            Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
+
+
+            //если король сделал ход
+            map.Clear();
+            game.SwapPlayer();
+            map.Add(king);
+            map.Add(rook1);
+            game.MakeTurn(new Position(6, 4), king);
+            Assert.AreEqual(false, king.IsCastlingPosible(rook1, map));
+            Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
+        }
     }
 }

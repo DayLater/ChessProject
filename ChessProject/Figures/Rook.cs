@@ -12,10 +12,12 @@ namespace ChessProject
         public Position Position { get;  set; }
         public Player Player { get; }
         public Image Picture => Player.Color == PlayerColor.Black ? Properties.Resources.RookB : Properties.Resources.RookW;
+        public bool IsFirstStep { get; private set; } = true;
 
         public void Move(Position newPosition)
         {
             Position = new Position(newPosition.X, newPosition.Y);
+            IsFirstStep = false; 
         }
 
         public Rook(Position position, Player player)
