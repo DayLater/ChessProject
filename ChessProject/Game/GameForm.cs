@@ -50,13 +50,18 @@ namespace ChessProject
                 if (game.PreviousFigure != null && game.IsSamePlayer && game.PosiblePositions != null)
                     UpdateMap();
                 //если это первое нажатие на фигуру или выбрали фигуру того же игрока
-                if (game.PreviousFigure == null || game.IsSamePlayer)
+                if (game.PreviousFigure is King && game.CurrentFigure is Rook && game.IsCastlingPosible())
+                {
+                    game.MakeCastling();
+                    SwapPlayers();
+                }
+                else if (game.PreviousFigure == null || game.IsSamePlayer)
                     ShowPosiblePositions(pressedCell);
             }
             // Если нажали на пустую клетку или на фигуру противника 
             else if (game.CurrentFigure == null || !game.IsSamePlayer)
             {
-                game.MakeTurn(pressedCell.Position); //сделали туда ход
+                game.Move(pressedCell.Position); //сделали туда ход
                 SwapPlayers(); //Поменяли игроков местами
             }
         }

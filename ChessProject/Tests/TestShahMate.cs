@@ -18,8 +18,8 @@ namespace ChessProject
         {
             GameModel game = new GameModel();
             game.Start();
-            game.MakeTurn(new Position(1, 5), game.Map[7, 3]);
-            game.MakeTurn(new Position(4, 2), game.Map[7, 5]);
+            game.Move(new Position(1, 5), game.Map[7, 3]);
+            game.Move(new Position(4, 2), game.Map[7, 5]);
             game.SwapPlayer();
             Assert.AreEqual("Шах и мат", game.FindStateOfGame());
         }
@@ -30,10 +30,10 @@ namespace ChessProject
             GameModel game = new GameModel();
             var map = game.Map;
             game.Start();
-            game.MakeTurn(new Position(5, 5), map[6, 5]);
-            game.MakeTurn(new Position(4, 6), map[6, 6]);
-            game.MakeTurn(new Position(3, 4), map[1, 4]);
-            game.MakeTurn(new Position(4, 7), map[0, 3]);
+            game.Move(new Position(5, 5), map[6, 5]);
+            game.Move(new Position(4, 6), map[6, 6]);
+            game.Move(new Position(3, 4), map[1, 4]);
+            game.Move(new Position(4, 7), map[0, 3]);
             Assert.AreEqual("Шах и мат", game.FindStateOfGame());
         }
 
@@ -147,14 +147,14 @@ namespace ChessProject
             GameModel game = new GameModel();
             var map = game.Map;
             game.Start();
-            game.MakeTurn(new Position(3, 3), map[7, 1]);
-            game.MakeTurn(new Position(3, 4), map[7, 6]);
-            game.MakeTurn(new Position(1, 5), map[7, 5]);
+            game.Move(new Position(3, 3), map[7, 1]);
+            game.Move(new Position(3, 4), map[7, 6]);
+            game.Move(new Position(1, 5), map[7, 5]);
             game.SwapPlayer();
-            game.MakeTurn(new Position(2, 2), map[0, 1]);
-            game.MakeTurn(new Position(7, 3), map[0, 2]);
-            game.MakeTurn(new Position(1, 4), map[0, 4]);
-            game.MakeTurn(new Position(2, 3), map[1, 3]);
+            game.Move(new Position(2, 2), map[0, 1]);
+            game.Move(new Position(7, 3), map[0, 2]);
+            game.Move(new Position(1, 4), map[0, 4]);
+            game.Move(new Position(2, 3), map[1, 3]);
             Assert.AreEqual("Шах и мат", game.FindStateOfGame());
         }
 
@@ -243,12 +243,12 @@ namespace ChessProject
             GameModel game = new GameModel();
             var map = game.Map;
             game.Start();
-            game.MakeTurn(new Position(7, 5), map[7, 7]);
-            game.MakeTurn(new Position(1, 5), map[7, 6]);
+            game.Move(new Position(7, 5), map[7, 7]);
+            game.Move(new Position(1, 5), map[7, 6]);
             map[6, 6] = null;
             game.SwapPlayer();
-            game.MakeTurn(new Position(5, 5), map[0, 1]);
-            game.MakeTurn(new Position(4, 4), map[0, 3]);
+            game.Move(new Position(5, 5), map[0, 1]);
+            game.Move(new Position(4, 4), map[0, 3]);
             game.SwapPlayer();
             Assert.AreEqual("Шах и мат", game.FindStateOfGame());
         }
@@ -259,13 +259,13 @@ namespace ChessProject
             GameModel game = new GameModel();
             var map = game.Map;
             game.Start();
-            game.MakeTurn(new Position(2, 3), map[7, 1]);
-            game.MakeTurn(new Position(6, 4), map[7, 3]);
+            game.Move(new Position(2, 3), map[7, 1]);
+            game.Move(new Position(6, 4), map[7, 3]);
             game.SwapPlayer();
 
-            game.MakeTurn(new Position(1, 3), map[0, 1]);
-            game.MakeTurn(new Position(2, 5), map[0, 6]);
-            game.MakeTurn(new Position(2, 2), map[1, 2]);
+            game.Move(new Position(1, 3), map[0, 1]);
+            game.Move(new Position(2, 5), map[0, 6]);
+            game.Move(new Position(2, 2), map[1, 2]);
             Assert.AreEqual("Шах и мат", game.FindStateOfGame());
         }
 
@@ -275,15 +275,15 @@ namespace ChessProject
             GameModel game = new GameModel();
             var map = game.Map;
             game.Start();
-            game.MakeTurn(new Position(2, 3), map[7, 1]);
+            game.Move(new Position(2, 3), map[7, 1]);
             map[7, 6] = null;
-            game.MakeTurn(new Position(3, 3), map[6, 3]);
+            game.Move(new Position(3, 3), map[6, 3]);
             game.SwapPlayer();
             map[0, 1] = null;
             map[1, 2] = null;
-            game.MakeTurn(new Position(1, 3), map[0, 2]);
-            game.MakeTurn(new Position(3, 4), map[1, 4]);
-            game.MakeTurn(new Position(1, 4), map[0, 6]);
+            game.Move(new Position(1, 3), map[0, 2]);
+            game.Move(new Position(3, 4), map[1, 4]);
+            game.Move(new Position(1, 4), map[0, 6]);
             Assert.AreEqual("Шах и мат", game.FindStateOfGame());
         }
 

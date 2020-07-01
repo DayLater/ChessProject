@@ -16,7 +16,7 @@ namespace ChessProject
 
         public bool IsCastlingPosible(Rook rook, Map map)
         {
-            if (!IsFirstStep || !rook.IsFirstStep)
+            if (rook == null || !IsFirstStep || !rook.IsFirstStep)
                 return false;
             var dy = -1;
             if (Position.Y < rook.Position.Y) dy = 1;
@@ -79,6 +79,17 @@ namespace ChessProject
             var result = allPosiblePositions
                 .Except(unacceptablePositions)
                 .ToList();// убираем все позиции, которые пересекаются в списках
+
+            var x = 0;
+            if (Player.Color == PlayerColor.White)
+                x = 7;
+            var rookPositions = new[] { new Position(x, 0), new Position(x, 7) };
+            foreach (var rookPos in rookPositions)
+            {
+                var rook = map[rookPos.X, rookPos.Y] as Rook;
+                if (IsCastlingPosible(rook, map))
+                    result.Add(rookPos);
+            }
             return result; 
         }
 

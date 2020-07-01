@@ -65,6 +65,7 @@ namespace ChessProject.Figures
 
             //проверяем возможность на ближнюю рокировку
             var rook2 = new Rook(new Position(7, 7), game.CurrentPlayer);
+            map.Add(rook2);
             Assert.AreEqual(true, king.IsCastlingPosible(rook2, map));
 
             //если между королем и башней стоит какая-то другая фигура
@@ -82,9 +83,14 @@ namespace ChessProject.Figures
             Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
 
             //если шаха нет, но поле пробивается чужой фигурой
-            map[5, 5] = map[5, 4];
+            map.Add(new Rook(new Position(5, 5), game.CurrentPlayer));
             map[5, 4] = null;
             Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
+
+            //Если вражеская фигура не смотрит пробивает поле короля
+            map.Add(new Rook(new Position(5, 7), game.CurrentPlayer));
+            map[5, 5] = null;
+            Assert.AreEqual(true, king.IsCastlingPosible(rook2, map));
 
 
             //если король сделал ход
@@ -92,7 +98,7 @@ namespace ChessProject.Figures
             game.SwapPlayer();
             map.Add(king);
             map.Add(rook1);
-            game.MakeTurn(new Position(6, 4), king);
+            game.Move(new Position(6, 4), king);
             Assert.AreEqual(false, king.IsCastlingPosible(rook1, map));
             Assert.AreEqual(false, king.IsCastlingPosible(rook2, map));
         }

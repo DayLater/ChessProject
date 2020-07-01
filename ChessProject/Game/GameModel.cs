@@ -47,6 +47,7 @@ namespace ChessProject
             if (CurrentPlayer == white) CurrentPlayer = black;
             else CurrentPlayer = white;
             PreviousFigure = null;
+            CurrentFigure = null;
         }
 
         //конструктор
@@ -112,7 +113,7 @@ namespace ChessProject
         }
 
         //сделать ход для тестов
-        public void MakeTurn(Position newPos, IFigure figure)
+        public void Move(Position newPos, IFigure figure)
         {
             Map[figure.Position.X, figure.Position.Y] = null;
             Map[newPos.X, newPos.Y] = figure;
@@ -120,9 +121,32 @@ namespace ChessProject
         }
 
         //сделать ход для формы
-        public void MakeTurn(Position newPos)
+        public void Move(Position newPos)
         {
-            MakeTurn(newPos, PreviousFigure);
+            Move(newPos, PreviousFigure);
+        }
+
+        public bool IsCastlingPosible()
+        {
+            var rook = CurrentFigure as Rook;
+            var king = PreviousFigure as King;
+            return king.IsCastlingPosible(rook, Map); 
+        }
+
+        public void MakeCastling()
+        {
+            var rook = CurrentFigure as Rook;
+            var king = PreviousFigure as King;
+            var x = king.Position.X;
+            var newKingPos = new Position(x, 6);
+            var newRookPos = new Position(x, 5);
+            if (king.Position.Y > rook.Position.Y)
+            {
+                newKingPos = new Position(x, 2);
+                newRookPos = new Position(x, 3);
+            }
+            Move(newKingPos, king);
+            Move(newRookPos, rook);
         }
 
         //поиск короля текущего игрока
