@@ -171,7 +171,8 @@ namespace ChessProject
             var map = game.Map;
             map.Clear();
             game.Start();
-            map.Add(new King(new Position(7, 6), game.CurrentPlayer));
+            map.Add(new King(new Position(7, 5), game.CurrentPlayer));
+            game.Move(new Position(7, 6), map[7, 5]);
             map.Add(new Pawn(new Position(4, 0), game.CurrentPlayer));
             map.Add(new Pawn(new Position(3, 1), game.CurrentPlayer));
             map.Add(new Pawn(new Position(4, 4), game.CurrentPlayer));
